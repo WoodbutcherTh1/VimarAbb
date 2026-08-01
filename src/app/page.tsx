@@ -8,12 +8,12 @@ import FluidBackground from "@/components/FluidBackground";
 import BrandSelector from "@/components/BrandSelector";
 import Sidebar from "@/components/Sidebar";
 import Breadcrumb from "@/components/Breadcrumb";
-import ProductGrid from "@/components/ProductGrid";
+import ProductCarousel from "@/components/ProductCarousel";
 import ProductModal from "@/components/ProductModal";
 import CategoryBanner from "@/components/CategoryBanner";
 import IndustriesShowcase from "@/components/IndustriesShowcase";
 import BrandLanding from "@/components/BrandLanding";
-import { Search, Menu, Grid3X3, ListFilter } from "lucide-react";
+import { Search, Menu, Grid3X3 } from "lucide-react";
 
 export default function Home() {
   const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
@@ -191,28 +191,22 @@ export default function Home() {
             <CategoryBanner category={currentCategory} accentColor={activeBrand.accentColor} />
           )}
 
-          {/* Toolbar */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-white/5">
-            <div className="flex items-center gap-2 text-sm text-white/40">
-              <Grid3X3 className="w-4 h-4" />
-              <span>
-                {displayedProducts.length} product{displayedProducts.length !== 1 ? "s" : ""}
-                {currentCategory ? ` in ${currentCategory.name}` : searchQuery ? ` matching "${searchQuery}"` : " featured"}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="p-2 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                <ListFilter className="w-4 h-4 text-white/40" />
-              </button>
-            </div>
-          </div>
-
           {/* Products */}
           <div className="flex-1 overflow-y-auto">
             {displayedProducts.length > 0 ? (
-              <ProductGrid
+              <ProductCarousel
                 products={displayedProducts}
                 accentColor={activeBrand.accentColor}
+                collectionName={
+                  currentCategory ? currentCategory.name : searchQuery ? `Search: "${searchQuery}"` : "Featured"
+                }
+                collectionTagline={
+                  currentCategory
+                    ? `${displayedProducts.length} product${displayedProducts.length !== 1 ? "s" : ""} in this collection`
+                    : searchQuery
+                      ? `${displayedProducts.length} result${displayedProducts.length !== 1 ? "s" : ""}`
+                      : `${activeBrand.name} highlights`
+                }
                 onProductClick={setSelectedProduct}
               />
             ) : (

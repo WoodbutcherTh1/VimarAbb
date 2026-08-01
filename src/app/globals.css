@@ -49,3 +49,57 @@ body {
 .perspective-1000 {
   perspective: 1000px;
 }
+
+/* Landing hero: word/letter reveal + floating product + cursor glow */
+.word-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+}
+.word-inner {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(105%);
+  filter: blur(20px);
+  animation: word-reveal-mask 1.3s cubic-bezier(0.05, 0.9, 0.1, 1) forwards;
+}
+@keyframes word-reveal-mask {
+  0% { opacity: 0; transform: translateY(105%); filter: blur(20px); }
+  30% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.letter-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 0.8;
+}
+.letter-inner {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-105%);
+  filter: blur(20px);
+  animation: letter-reveal-mask 1.2s cubic-bezier(0.05, 0.9, 0.1, 1) forwards;
+}
+@keyframes letter-reveal-mask {
+  0% { opacity: 0; transform: translateX(-105%); filter: blur(20px); }
+  25% { opacity: 1; }
+  100% { opacity: 0.95; transform: translateX(0); filter: blur(0); }
+}
+
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0) rotate(var(--float-rot, -2deg)); }
+  50% { transform: translateY(-18px) rotate(var(--float-rot-alt, 2deg)); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes wave-expand {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.3); opacity: 0; }
+}
