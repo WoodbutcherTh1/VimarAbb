@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import { brands, getCategoryByPath, getAllProducts, abbIndustries, Product } from "@/lib/data";
 import FluidBackground from "@/components/FluidBackground";
+import BrandBackgroundVideo from "@/components/BrandBackgroundVideo";
 import BrandSelector from "@/components/BrandSelector";
 import Sidebar from "@/components/Sidebar";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -103,6 +104,7 @@ export default function Home() {
 
       {activeBrandId && (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
+      <BrandBackgroundVideo brandId={activeBrandId} />
       <FluidBackground brandId={activeBrandId} />
 
       {/* Header */}
