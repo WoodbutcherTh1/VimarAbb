@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "@/lib/gsap";
 import { brands, getCategoryByPath, getAllProducts, Product } from "@/lib/data";
 import FluidBackground from "@/components/FluidBackground";
 import BrandSelector from "@/components/BrandSelector";
@@ -9,6 +10,7 @@ import Sidebar from "@/components/Sidebar";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
+import CategoryBanner from "@/components/CategoryBanner";
 import { Search, Menu, Grid3X3, ListFilter } from "lucide-react";
 
 export default function Home() {
@@ -17,6 +19,38 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.fromTo(
+        ".hero-logo",
+        { scale: 0.6, opacity: 0, rotate: -8 },
+        { scale: 1, opacity: 1, rotate: 0, duration: 0.6 }
+      )
+        .fromTo(
+          ".hero-title-text",
+          { y: 14, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5 },
+          "-=0.35"
+        )
+        .fromTo(
+          ".hero-brand-selector",
+          { y: -10, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5 },
+          "-=0.3"
+        )
+        .fromTo(
+          ".hero-search",
+          { x: 16, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.45 },
+          "-=0.3"
+        );
+    }, headerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const activeBrand = useMemo(
     () => brands.find((b) => b.id === activeBrandId) || brands[0],
@@ -64,15 +98,14 @@ export default function Home() {
       <FluidBackground brandId={activeBrandId} />
 
       {/* Header */}
-      <header className="relative z-20 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl">
+      <header
+        ref={headerRef}
+        className="relative z-20 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl"
+      >
         <div className="flex items-center gap-6">
-          <motion.div
-            className="flex items-center gap-3"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
+          <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
+              className="hero-logo w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
               style={{
                 backgroundColor: activeBrand.accentColor,
                 color: activeBrand.id === "vimar" ? "#1a1a2e" : "#fff",
@@ -80,7 +113,7 @@ export default function Home() {
             >
               {activeBrand.logoText[0]}
             </div>
-            <div>
+            <div className="hero-title-text">
               <h1 className="font-bold text-lg tracking-tight leading-none">
                 {activeBrand.logoText}
               </h1>
@@ -88,13 +121,15 @@ export default function Home() {
                 {activeBrand.tagline}
               </p>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">
-          <BrandSelector activeBrand={activeBrandId} onSelect={handleBrandChange} />
+          <div className="hero-brand-selector">
+            <BrandSelector activeBrand={activeBrandId} onSelect={handleBrandChange} />
+          </div>
 
-          <div className="hidden md:flex items-center relative">
+          <div className="hero-search hidden md:flex items-center relative">
             <Search className="absolute left-3 w-4 h-4 text-white/30" />
             <input
               type="text"
@@ -143,6 +178,10 @@ export default function Home() {
             categories={activeBrand.categories}
             onNavigate={handleNavigate}
           />
+
+          {!searchQuery && currentCategory?.image && (
+            <CategoryBanner category={currentCategory} accentColor={activeBrand.accentColor} />
+          )}
 
           {/* Toolbar */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-white/5">

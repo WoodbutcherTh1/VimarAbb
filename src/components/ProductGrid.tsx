@@ -147,9 +147,12 @@ export default function ProductGrid({ products, accentColor, onProductClick }: P
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const scroller = gridRef.current?.closest(".overflow-y-auto") as HTMLElement | null;
+
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>(".product-card-reveal");
       ScrollTrigger.batch(cards, {
+        scroller: scroller ?? undefined,
         start: "top 92%",
         onEnter: (batch) =>
           gsap.fromTo(

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "@/lib/gsap";
 import { Product } from "@/lib/data";
 import { X, Euro, Check, Package, Shield, Zap, Award } from "lucide-react";
 
@@ -12,6 +13,8 @@ interface ProductModalProps {
 }
 
 export default function ProductModal({ product, accentColor, onClose }: ProductModalProps) {
+  const priceRef = useRef<HTMLSpanElement>(null);
+
   useEffect(() => {
     if (product) {
       document.body.style.overflow = "hidden";
@@ -20,6 +23,23 @@ export default function ProductModal({ product, accentColor, onClose }: ProductM
     }
     return () => {
       document.body.style.overflow = "";
+    };
+  }, [product]);
+
+  useEffect(() => {
+    if (!product || !priceRef.current) return;
+    const counter = { value: 0 };
+    const tween = gsap.to(counter, {
+      value: product.price,
+      duration: 0.9,
+      delay: 0.35,
+      ease: "power2.out",
+      onUpdate: () => {
+        if (priceRef.current) priceRef.current.textContent = counter.value.toFixed(2);
+      },
+    });
+    return () => {
+      tween.kill();
     };
   }, [product]);
 
@@ -165,7 +185,9 @@ export default function ProductModal({ product, accentColor, onClose }: ProductM
                       <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Unit Price</p>
                       <div className="flex items-baseline gap-2">
                         <Euro className="w-6 h-6 text-white/60" />
-                        <span className="text-4xl font-bold tracking-tight">{product.price.toFixed(2)}</span>
+                        <span className="text-4xl font-bold tracking-tight">
+                          <span ref={priceRef}>0.00</span>
+                        </span>
                         <span className="text-sm text-white/30 font-medium">{product.currency}</span>
                       </div>
                       <p className="text-xs text-white/20 mt-1">Excluding VAT • Shipping calculated at checkout</p>
