@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "@/lib/gsap";
-import { brands, getCategoryByPath, getAllProducts, Product } from "@/lib/data";
+import { brands, getCategoryByPath, getAllProducts, abbIndustries, Product } from "@/lib/data";
 import FluidBackground from "@/components/FluidBackground";
 import BrandSelector from "@/components/BrandSelector";
 import Sidebar from "@/components/Sidebar";
@@ -11,10 +11,12 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import CategoryBanner from "@/components/CategoryBanner";
+import IndustriesShowcase from "@/components/IndustriesShowcase";
+import BrandLanding from "@/components/BrandLanding";
 import { Search, Menu, Grid3X3, ListFilter } from "lucide-react";
 
 export default function Home() {
-  const [activeBrandId, setActiveBrandId] = useState<string>("vimar");
+  const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<string[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -94,6 +96,12 @@ export default function Home() {
   };
 
   return (
+    <>
+      <AnimatePresence>
+        {!activeBrandId && <BrandLanding onSelect={handleBrandChange} />}
+      </AnimatePresence>
+
+      {activeBrandId && (
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       <FluidBackground brandId={activeBrandId} />
 
@@ -215,6 +223,10 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {!searchQuery && !currentCategory && activeBrandId === "abb" && (
+            <IndustriesShowcase industries={abbIndustries} accentColor={activeBrand.accentColor} />
+          )}
         </main>
       </div>
 
@@ -225,5 +237,7 @@ export default function Home() {
         onClose={() => setSelectedProduct(null)}
       />
     </div>
+      )}
+    </>
   );
 }
