@@ -17,6 +17,24 @@ const ACCENT = "#39ff8f";
 const EXIT_DURATION_MS = 900;
 const WORDMARK = "SHOWROOM";
 
+function LetterStagger({ text, baseDelay = 0 }: { text: string; baseDelay?: number }) {
+  return (
+    <span className="inline-flex" style={{ whiteSpace: "pre" }}>
+      {[...text].map((char, i) => (
+        <motion.span
+          key={i}
+          className="inline-block"
+          initial={{ opacity: 0, y: 6, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ delay: baseDelay + i * 0.035, duration: 0.4, ease: "easeOut" }}
+        >
+          {char === " " ? " " : char}
+        </motion.span>
+      ))}
+    </span>
+  );
+}
+
 function WordReveal({ lines }: { lines: string[] }) {
   let wordIndex = 0;
   return (
@@ -139,6 +157,29 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
       </svg>
 
       <ProductMosaic />
+
+      {/* Partner credit */}
+      <motion.div
+        className="fixed top-6 left-6 z-[4] flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md transition-opacity duration-300"
+        style={{ opacity: exitingBrand ? 0 : 1 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.1, duration: 0.6 }}
+      >
+        <span className="text-[9px] uppercase tracking-[0.2em] text-white/35 leading-tight">
+          <LetterStagger text="In partnership" baseDelay={1.3} />
+          <br />
+          <LetterStagger text="with" baseDelay={1.3 + "In partnership".length * 0.035} />
+        </span>
+        <div className="w-px h-6 bg-white/10" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/partners/kahane-logo.svg"
+          alt="Kahane"
+          className="h-5 w-auto"
+          style={{ filter: "grayscale(1) brightness(0) invert(1)", opacity: 0.7 }}
+        />
+      </motion.div>
 
       {/* top vignette */}
       <div
