@@ -29,6 +29,18 @@ export default function ProductCarousel({
   const [activeIndex, setActiveIndex] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{ startX: number; dragging: boolean } | null>(null);
+  const activeCardRef = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+
+  const handleActiveCardMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = activeCardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ rx: py * -14, ry: px * 14 });
+  };
+  const resetActiveCardTilt = () => setTilt({ rx: 0, ry: 0 });
 
   useEffect(() => {
     setActiveIndex(0);
@@ -99,6 +111,16 @@ export default function ProductCarousel({
           }}
         />
 
+        {/* Ambient pulsing glow behind the stage */}
+        <div
+          className="absolute left-1/2 top-1/2 w-[340px] h-[340px] rounded-full pointer-events-none blur-[90px]"
+          style={{
+            backgroundColor: accentColor,
+            transform: "translate(-50%, -50%)",
+            animation: "ambient-pulse 4.5s ease-in-out infinite",
+          }}
+        />
+
         <div
           ref={trackRef}
           className="absolute inset-0 flex items-center justify-center"
@@ -145,17 +167,37 @@ export default function ProductCarousel({
 
                 {/* Card */}
                 <div
+                  ref={isActive ? activeCardRef : undefined}
+                  onMouseMove={isActive ? handleActiveCardMove : undefined}
+                  onMouseLeave={isActive ? resetActiveCardTilt : undefined}
                   className={cn(
                     "relative w-full h-full rounded-xl overflow-hidden border bg-white/[0.03]",
                     isActive ? "border-white/20 shadow-2xl" : "border-white/5"
                   )}
-                  style={isActive ? { boxShadow: `0 20px 60px -12px ${accentColor}55` } : undefined}
+                  style={{
+                    transformStyle: "preserve-3d",
+                    transition: isActive
+                      ? "transform 0.15s ease-out, box-shadow 0.3s ease"
+                      : undefined,
+                    transform: isActive
+                      ? `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(1.03)`
+                      : undefined,
+                    boxShadow: isActive ? `0 20px 60px -12px ${accentColor}55` : undefined,
+                  }}
                 >
                   <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${product.image})` }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                  {isActive && (
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: `radial-gradient(circle at ${50 + tilt.ry * 2}% ${50 - tilt.rx * 2}%, rgba(255,255,255,0.15), transparent 60%)`,
+                      }}
+                    />
+                  )}
                   {product.featured && (
                     <div className="absolute top-2 left-2 p-1 rounded-full bg-white/10 backdrop-blur-md">
                       <Sparkles className="w-3 h-3" style={{ color: accentColor }} />
@@ -183,20 +225,24 @@ export default function ProductCarousel({
         </div>
 
         {/* Arrows */}
-        <button
+        <motion.button
           onClick={prev}
           disabled={activeIndex === 0}
           className="absolute left-4 top-1/2 -translate-y-1/2 z-[200] p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+          whileHover={{ scale: 1.1, x: -2 }}
+          whileTap={{ scale: 0.9 }}
         >
           <ChevronLeft className="w-5 h-5 text-white/70" />
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={next}
           disabled={activeIndex === products.length - 1}
           className="absolute right-4 top-1/2 -translate-y-1/2 z-[200] p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+          whileHover={{ scale: 1.1, x: 2 }}
+          whileTap={{ scale: 0.9 }}
         >
           <ChevronRight className="w-5 h-5 text-white/70" />
-        </button>
+        </motion.button>
       </div>
 
       {/* Counter + name + dots */}

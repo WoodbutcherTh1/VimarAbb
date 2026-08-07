@@ -204,38 +204,64 @@ export default function Home() {
             onNavigate={handleNavigate}
           />
 
-          {!searchQuery && currentCategory?.image && (
-            <CategoryBanner category={currentCategory} accentColor={activeBrand.accentColor} />
-          )}
+          <AnimatePresence mode="wait">
+            {!searchQuery && currentCategory?.image && (
+              <motion.div
+                key={`banner-${currentCategory.id}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CategoryBanner category={currentCategory} accentColor={activeBrand.accentColor} />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Products */}
           <div
             className="flex-1 overflow-y-auto"
             onScroll={(e) => setHeaderCompact(e.currentTarget.scrollTop > 24)}
           >
-            {displayedProducts.length > 0 ? (
-              <ProductCarousel
-                products={displayedProducts}
-                accentColor={activeBrand.accentColor}
-                collectionName={
-                  currentCategory ? currentCategory.name : searchQuery ? `Search: "${searchQuery}"` : "Featured"
-                }
-                collectionTagline={
-                  currentCategory
-                    ? `${displayedProducts.length} product${displayedProducts.length !== 1 ? "s" : ""} in this collection`
-                    : searchQuery
-                      ? `${displayedProducts.length} result${displayedProducts.length !== 1 ? "s" : ""}`
-                      : `${activeBrand.name} highlights`
-                }
-                onProductClick={setSelectedProduct}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center h-96 text-white/20">
-                <Grid3X3 className="w-12 h-12 mb-4 opacity-30" />
-                <p className="text-lg font-medium">No products found</p>
-                <p className="text-sm">Try adjusting your search or category selection</p>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {displayedProducts.length > 0 ? (
+                <motion.div
+                  key={currentCategory?.id ?? (searchQuery ? `search-${searchQuery}` : "featured")}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <ProductCarousel
+                    products={displayedProducts}
+                    accentColor={activeBrand.accentColor}
+                    collectionName={
+                      currentCategory ? currentCategory.name : searchQuery ? `Search: "${searchQuery}"` : "Featured"
+                    }
+                    collectionTagline={
+                      currentCategory
+                        ? `${displayedProducts.length} product${displayedProducts.length !== 1 ? "s" : ""} in this collection`
+                        : searchQuery
+                          ? `${displayedProducts.length} result${displayedProducts.length !== 1 ? "s" : ""}`
+                          : `${activeBrand.name} highlights`
+                    }
+                    onProductClick={setSelectedProduct}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center h-96 text-white/20"
+                >
+                  <Grid3X3 className="w-12 h-12 mb-4 opacity-30" />
+                  <p className="text-lg font-medium">No products found</p>
+                  <p className="text-sm">Try adjusting your search or category selection</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {!searchQuery && !currentCategory && activeBrandId === "abb" && (

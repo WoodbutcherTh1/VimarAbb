@@ -15,9 +15,9 @@ export default function CategoryBanner({ category, accentColor }: CategoryBanner
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        ".category-banner-image",
-        { scale: 1.15, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.1, ease: "power3.out" }
+        ".category-banner-image-wrap",
+        { opacity: 0 },
+        { opacity: 1, duration: 1.1, ease: "power3.out" }
       );
       gsap.fromTo(
         ".category-banner-title",
@@ -41,10 +41,15 @@ export default function CategoryBanner({ category, accentColor }: CategoryBanner
       ref={containerRef}
       className="relative h-48 md:h-64 overflow-hidden border-b border-white/5"
     >
-      <div
-        className="category-banner-image absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${category.image})` }}
-      />
+      <div className="category-banner-image-wrap absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${category.image})`,
+            animation: "ken-burns 16s ease-in-out infinite alternate",
+          }}
+        />
+      </div>
       <div
         className="category-banner-glow absolute inset-0"
         style={{
