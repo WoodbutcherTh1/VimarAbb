@@ -34,12 +34,17 @@ export interface Brand {
   categories: Category[];
 }
 
+// Neutral "no photo yet" placeholder for products missing real photography.
+// Deliberately local and static — never a random third-party stock photo.
+const PLACEHOLDER_PRODUCT_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Crect width='600' height='600' fill='%230a0a0f'/%3E%3Crect x='210' y='180' width='180' height='240' rx='18' fill='none' stroke='%23ffffff22' stroke-width='4'/%3E%3Crect x='250' y='230' width='45' height='45' rx='8' fill='%23ffffff14'/%3E%3Crect x='305' y='230' width='45' height='45' rx='8' fill='%23ffffff14'/%3E%3Crect x='250' y='325' width='100' height='16' rx='8' fill='%23ffffff14'/%3E%3C/svg%3E";
+
 function product(overrides: Partial<Product> & Pick<Product, "id" | "sku" | "name">): Product {
   return {
     description: "Premium electrical component engineered for reliability and modern design.",
     price: 49.9,
     currency: "EUR",
-    image: `https://picsum.photos/seed/${overrides.id}/600/600`,
+    image: PLACEHOLDER_PRODUCT_IMAGE,
     inStock: true,
     featured: false,
     tags: [],
@@ -76,6 +81,7 @@ const vimarPlanaSockets = category("plana-sockets", "Sockets", {
       description: "Elegant 2-pole + earth socket from the Plana series, satin finish.",
       price: 18.5,
       featured: true,
+      image: "/images/vimar/plana-socket-2p.jpg",
       tags: ["Plana", "Socket", "16A"],
       specs: [
         { label: "Poles", value: "2P+E" },
@@ -91,6 +97,7 @@ const vimarPlanaSockets = category("plana-sockets", "Sockets", {
       description: "Fast-charge USB-C outlet integrated into the Plana design line.",
       price: 34.0,
       featured: true,
+      image: "/images/vimar/plana-socket-usb.jpg",
       tags: ["Plana", "USB-C", "Charging"],
     }),
   ],
@@ -104,6 +111,7 @@ const vimarPlanaSwitches = category("plana-switches", "Switches", {
       name: "Plana 1-Way Switch",
       description: "Single-pole switch with soft-touch rocker, Plana collection.",
       price: 14.2,
+      image: "/images/vimar/plana-switch-1way.jpg",
       tags: ["Plana", "Switch"],
     }),
     product({
@@ -112,6 +120,7 @@ const vimarPlanaSwitches = category("plana-switches", "Switches", {
       name: "Plana Rotary Dimmer",
       description: "Smooth rotary dimmer for incandescent and LED-compatible loads.",
       price: 42.75,
+      image: "/images/vimar/plana-switch-dimmer.jpg",
       tags: ["Plana", "Dimmer", "Lighting"],
     }),
   ],
@@ -129,6 +138,7 @@ const vimarEikonFrames = category("eikon-frames", "Frames", {
       name: "Eikon 3-Module Frame",
       description: "Anthracite metal frame for 3-module Eikon Evo devices.",
       price: 22.0,
+      image: "/images/vimar/eikon-frame-3m.jpg",
       tags: ["Eikon", "Frame"],
     }),
   ],
@@ -143,6 +153,7 @@ const vimarEikonSockets = category("eikon-sockets", "Sockets", {
       description: "German-standard Schuko socket in the Eikon Evo collection.",
       price: 21.3,
       featured: true,
+      image: "/images/vimar/eikon-schuko.jpg",
       tags: ["Eikon", "Schuko", "Socket"],
     }),
   ],
@@ -163,6 +174,7 @@ const vimarSmartHome = category("smart-home", "Smart Home", {
           description: "Touch thermostat with color display and Bluetooth setup.",
           price: 129.0,
           featured: true,
+          image: "/images/vimar/view-thermostat.jpg",
           tags: ["Smart Home", "Thermostat", "Wireless"],
           specs: [
             { label: "Connectivity", value: "Bluetooth / RF" },
@@ -181,6 +193,7 @@ const vimarSmartHome = category("smart-home", "Smart Home", {
           name: "By-me Plus KNX Gateway",
           description: "Central gateway for By-me Plus home automation ecosystem.",
           price: 310.0,
+          image: "/images/vimar/byme-gateway.jpg",
           tags: ["Smart Home", "KNX", "Gateway"],
         }),
       ],
@@ -586,6 +599,7 @@ const abbCircuitBreakersRcd = category("rcd", "Residual Current Devices", {
       name: "System pro M compact F200 RCD 40A",
       description: "4-pole residual current device, 30mA sensitivity, type A.",
       price: 58.0,
+      image: "/images/abb/din-rail/eovr.png",
       tags: ["RCD", "Protection", "40A"],
     }),
     product({
@@ -686,6 +700,7 @@ const abbAutomation = category("automation", "Building Automation", {
           description: "Central hub connecting free@home smart devices to the app.",
           price: 245.0,
           featured: true,
+          image: "/images/abb/automation/freehome-hub.jpg",
           tags: ["Automation", "free@home", "Hub"],
         }),
       ],
@@ -698,6 +713,7 @@ const abbAutomation = category("automation", "Building Automation", {
           name: "KNX Switch Actuator 8-Fold",
           description: "8-channel KNX switching actuator for DIN rail mounting.",
           price: 189.5,
+          image: "/images/abb/din-rail/accessories.png",
           tags: ["Automation", "KNX", "Actuator"],
         }),
       ],

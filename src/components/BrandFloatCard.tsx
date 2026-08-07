@@ -89,10 +89,10 @@ export default function BrandFloatCard({
 
       <div className="absolute inset-x-0 bottom-0 p-4 text-left">
         <p
-          className="text-[9px] uppercase tracking-[0.25em] mb-1"
+          className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] mb-1.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
           style={{ color: brand.accentColor }}
         >
-          {activeProduct.name} · {activeProduct.currency} {activeProduct.price.toFixed(0)}
+          {activeProduct.name} <span className="opacity-50">·</span> {activeProduct.currency} {activeProduct.price.toFixed(0)}
         </p>
         <h3 className="text-2xl font-bold tracking-tight text-white leading-none">
           {brand.logoText}
