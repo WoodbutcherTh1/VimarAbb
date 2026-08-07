@@ -7,6 +7,7 @@ import { brands } from "@/lib/data";
 import MountainScene from "@/components/MountainScene";
 import BrandFloatCard from "@/components/BrandFloatCard";
 import CustomCursor from "@/components/CustomCursor";
+import ProductMosaic from "@/components/ProductMosaic";
 
 interface BrandLandingProps {
   onSelect: (brandId: string) => void;
@@ -82,7 +83,62 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
       transition={{ duration: 0.4 }}
     >
       <CustomCursor label="Enter ⇢" accentColor={ACCENT} />
+
+      {/* Atmospheric hero background: distant coaster silhouette + electrician at a panel */}
+      <div
+        className="fixed inset-0 pointer-events-none transition-opacity duration-300"
+        style={{ zIndex: -2, opacity: exitingBrand ? 0 : 1 }}
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-[0.55]"
+          style={{
+            backgroundImage: "url(/images/landing/hero-background.jpg)",
+            animation: "ken-burns 28s ease-in-out infinite alternate",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050507]/70 via-transparent to-[#050507]" />
+      </div>
+
       <MountainScene accentColor={ACCENT} />
+
+      {/* Sparks riding the coaster track traced in the background image */}
+      <svg
+        className="fixed inset-0 w-full h-full pointer-events-none transition-opacity duration-300"
+        style={{ zIndex: 0, opacity: exitingBrand ? 0 : 1 }}
+        viewBox="0 0 2048 1152"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <filter id="spark-glow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <circle
+          r="6"
+          fill={ACCENT}
+          filter="url(#spark-glow)"
+          style={{
+            offsetPath: "path('M 0,700 C 150,620 250,640 320,760 C 380,860 450,900 640,880')",
+            animation: "ride-track 7s linear infinite",
+          }}
+        />
+        <circle
+          r="6"
+          fill={ACCENT}
+          filter="url(#spark-glow)"
+          style={{
+            offsetPath: "path('M 1088,1000 C 1250,900 1350,850 1450,860 C 1600,875 1750,1000 2048,1000')",
+            animation: "ride-track 8.5s linear infinite",
+            animationDelay: "1.2s",
+          }}
+        />
+      </svg>
+
+      <ProductMosaic />
 
       {/* top vignette */}
       <div

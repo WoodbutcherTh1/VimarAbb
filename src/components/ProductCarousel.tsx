@@ -31,6 +31,8 @@ export default function ProductCarousel({
   const dragState = useRef<{ startX: number; dragging: boolean } | null>(null);
   const activeCardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  const [dragDelta, setDragDelta] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleActiveCardMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = activeCardRef.current;
@@ -67,14 +69,25 @@ export default function ProductCarousel({
 
   const handlePointerDown = (e: React.PointerEvent) => {
     dragState.current = { startX: e.clientX, dragging: true };
+    setIsDragging(true);
+    setDragDelta(0);
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
-  const handlePointerUp = (e: React.PointerEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!dragState.current?.dragging) return;
+    setDragDelta(e.clientX - dragState.current.startX);
+  };
+  const endDrag = (e: React.PointerEvent) => {
     if (!dragState.current?.dragging) return;
     const delta = e.clientX - dragState.current.startX;
-    if (Math.abs(delta) > 40) {
+    const atStart = activeIndex === 0;
+    const atEnd = activeIndex === products.length - 1;
+    if (Math.abs(delta) > 60 && !(delta > 0 && atStart) && !(delta < 0 && atEnd)) {
       delta > 0 ? prev() : next();
     }
     dragState.current = null;
+    setIsDragging(false);
+    setDragDelta(0);
   };
 
   const activeProduct = products[activeIndex];
@@ -99,9 +112,11 @@ export default function ProductCarousel({
       {/* Stage */}
       <div
         className="relative h-[440px] overflow-hidden select-none"
-        style={{ perspective: "1400px" }}
+        style={{ perspective: "1400px", cursor: isDragging ? "grabbing" : "grab" }}
         onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
+        onPointerMove={handlePointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
       >
         {/* Mirror floor gradient */}
         <div
@@ -132,8 +147,9 @@ export default function ProductCarousel({
             if (abs > MAX_VISIBLE_OFFSET) return null;
 
             const isActive = offset === 0;
-            const translateX = offset * SPACING;
-            const rotateY = Math.max(-45, Math.min(45, -offset * 18));
+            const dragOffset = isDragging ? dragDelta * 0.7 : 0;
+            const translateX = offset * SPACING + dragOffset;
+            const rotateY = Math.max(-45, Math.min(45, -offset * 18 - dragOffset * 0.04));
             const scale = Math.max(0.55, 1 - abs * 0.13);
             const opacity = Math.max(0, 1 - abs * 0.22);
             const zIndex = 100 - abs;
@@ -151,7 +167,9 @@ export default function ProductCarousel({
                   zIndex,
                   opacity,
                   transform: `translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale})`,
-                  transition: "transform 0.6s cubic-bezier(0.22,1,0.36,1), opacity 0.6s ease, z-index 0s",
+                  transition: isDragging
+                    ? "opacity 0.2s ease"
+                    : "transform 0.75s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease, z-index 0s",
                   transformStyle: "preserve-3d",
                 }}
               >

@@ -15,15 +15,23 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-label-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-heading {
+  font-family: var(--font-heading), system-ui, sans-serif;
 }
 
 /* Custom scrollbar */
@@ -112,4 +120,11 @@ body {
 @keyframes ken-burns {
   0% { transform: scale(1) translate(0, 0); }
   100% { transform: scale(1.12) translate(-1%, -1%); }
+}
+
+@keyframes ride-track {
+  0% { offset-distance: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
 }

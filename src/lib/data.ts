@@ -206,7 +206,6 @@ const vimarSmartHome = category("smart-home", "Smart Home", {
 // ---------------------------------------------------------------------------
 
 const abbBuschJaegerSockets = category("bj-sockets", "Sockets", {
-  image: "/images/abb/switch-ranges/future-linear.jpg",
   products: [
     product({
       id: "abb-bj-socket-schuko",
@@ -215,14 +214,12 @@ const abbBuschJaegerSockets = category("bj-sockets", "Sockets", {
       description: "Robust Schuko socket from the Busch-Jaeger future linear range.",
       price: 19.9,
       featured: true,
-      image: "/images/abb/switch-ranges/future-linear.jpg",
       tags: ["Busch-Jaeger", "Socket", "Schuko"],
     }),
   ],
 });
 
 const abbBuschJaegerSwitches = category("bj-switches", "Switches", {
-  image: "/images/abb/switch-ranges/axcent.jpg",
   products: [
     product({
       id: "abb-bj-switch-rocker",
@@ -230,14 +227,12 @@ const abbBuschJaegerSwitches = category("bj-switches", "Switches", {
       name: "Busch-Jaeger Rocker Switch",
       description: "Two-way rocker switch with anti-fingerprint coated surface.",
       price: 16.4,
-      image: "/images/abb/switch-ranges/axcent.jpg",
       tags: ["Busch-Jaeger", "Switch"],
     }),
   ],
 });
 
 const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
-  image: "/images/abb/switch-ranges/impressivo.jpg",
   products: [
     product({
       id: "abb-range-future-linear",
@@ -246,7 +241,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       description: "Minimalist flush design line with a slender flat frame, a Busch-Jaeger signature range.",
       price: 24.9,
       featured: true,
-      image: "/images/abb/switch-ranges/future-linear.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Minimalist"],
     }),
     product({
@@ -255,7 +249,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "axcent",
       description: "Bold, sculpted switch range with a distinctive angled profile.",
       price: 27.5,
-      image: "/images/abb/switch-ranges/axcent.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Design"],
     }),
     product({
@@ -265,7 +258,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       description: "Premium glass-front switch range for a refined, high-end interior finish.",
       price: 45.0,
       featured: true,
-      image: "/images/abb/switch-ranges/impressivo.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Glass"],
     }),
     product({
@@ -274,7 +266,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "ivie",
       description: "Warm, rounded switch range designed for a soft, contemporary look.",
       price: 22.3,
-      image: "/images/abb/switch-ranges/ivie.jpg",
       tags: ["Switch Range", "Busch-Jaeger"],
     }),
     product({
@@ -283,7 +274,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "millenium",
       description: "Classic square-edged switch range, a long-standing Busch-Jaeger bestseller.",
       price: 18.9,
-      image: "/images/abb/switch-ranges/millenium.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Classic"],
     }),
     product({
@@ -292,7 +282,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "pure stainless steel",
       description: "Brushed stainless steel switch range for an industrial, tactile finish.",
       price: 38.6,
-      image: "/images/abb/switch-ranges/pure-stainless.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Stainless Steel"],
     }),
     product({
@@ -301,7 +290,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Sky Niessen",
       description: "Slim-profile Niessen range combining Spanish design with ABB engineering.",
       price: 26.1,
-      image: "/images/abb/switch-ranges/sky-niessen.jpg",
       tags: ["Switch Range", "Niessen"],
     }),
     product({
@@ -310,7 +298,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "solo",
       description: "Compact, understated switch range built for everyday reliability.",
       price: 15.4,
-      image: "/images/abb/switch-ranges/solo.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Compact"],
     }),
     product({
@@ -319,7 +306,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "swing L",
       description: "Curved large-format rocker range for a soft architectural statement.",
       price: 29.8,
-      image: "/images/abb/switch-ranges/swing-l.jpg",
       tags: ["Switch Range", "Busch-Jaeger"],
     }),
     product({
@@ -328,7 +314,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Zenit",
       description: "VDE-standard Niessen range with a clean, versatile frame system.",
       price: 20.7,
-      image: "/images/abb/switch-ranges/zenit-vde.jpg",
       tags: ["Switch Range", "Niessen", "VDE"],
     }),
     product({
@@ -364,7 +349,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Framia",
       description: "Modular frame system that adapts across multiple Busch-Jaeger switch ranges.",
       price: 12.8,
-      image: "/images/abb/switch-ranges/framia.png",
       tags: ["Switch Range", "Frame System"],
     }),
     product({
@@ -400,7 +384,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Décento",
       description: "Textured concrete-look frame with a rounded, understated switch plate.",
       price: 16.9,
-      image: "/images/abb/switch-ranges/decento.jpg",
       tags: ["Switch Range", "Niessen"],
     }),
     product({
@@ -418,7 +401,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Busch-Duro 2000 AP",
       description: "Surface-mounted industrial switch range rated for demanding environments.",
       price: 28.3,
-      image: "/images/abb/switch-ranges/buschduro2000ap.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Surface-Mount"],
     }),
     product({
@@ -427,7 +409,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Busch-Duro 2000 SI",
       description: "Flush-mounted variant of the Busch-Duro 2000 industrial switch range.",
       price: 24.7,
-      image: "/images/abb/switch-ranges/buschduro2000si.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Flush-Mount"],
     }),
     product({
@@ -436,7 +417,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Busch-Duro 2000 WDI",
       description: "Weatherproof outdoor variant of the Busch-Duro 2000 range, IP54 rated.",
       price: 31.2,
-      image: "/images/abb/switch-ranges/buschduro2000wdi.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Weatherproof"],
       specs: [
         { label: "Material", value: "Polycarbonate" },
@@ -451,7 +431,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Metal-Clad",
       description: "Brushed metal switch range for a premium industrial-chic finish.",
       price: 34.9,
-      image: "/images/abb/switch-ranges/metal-clad.png",
       tags: ["Switch Range", "Niessen", "Metal"],
     }),
     product({
@@ -469,7 +448,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Alpha BS",
       description: "Compact functional switch range designed for high-volume residential projects.",
       price: 13.6,
-      image: "/images/abb/switch-ranges/alphabs.jpg",
       tags: ["Switch Range", "Compact"],
     }),
     product({
@@ -478,7 +456,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "axcent pur",
       description: "Minimalist variant of the axcent range in a pure single-tone finish.",
       price: 25.4,
-      image: "/images/abb/switch-ranges/axcent-pur.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Minimalist"],
     }),
     product({
@@ -487,7 +464,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Impuls",
       description: "Timeless German-engineered switch range with a matte frame finish.",
       price: 22.8,
-      image: "/images/abb/switch-ranges/impuls.jpg",
       tags: ["Switch Range", "Busch-Jaeger"],
     }),
     product({
@@ -505,7 +481,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "ReflexSI",
       description: "Reflective glossy-finish switch range for statement interiors.",
       price: 27.1,
-      image: "/images/abb/switch-ranges/reflexsi.jpg",
       tags: ["Switch Range", "Niessen", "Glossy"],
     }),
     product({
@@ -514,7 +489,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
       name: "Allwetter 44",
       description: "Rugged all-weather outdoor switch range rated for harsh site conditions.",
       price: 33.5,
-      image: "/images/abb/switch-ranges/allwetter44.jpg",
       tags: ["Switch Range", "Busch-Jaeger", "Outdoor"],
       specs: [
         { label: "Material", value: "Polycarbonate" },
@@ -536,7 +510,6 @@ const abbSwitchRanges = category("bj-switch-ranges", "Switch Ranges", {
 });
 
 const abbBuschJaeger = category("busch-jaeger", "Busch-Jaeger Series", {
-  image: "/images/abb/switch-ranges/impressivo.jpg",
   children: [abbBuschJaegerSockets, abbBuschJaegerSwitches, abbSwitchRanges],
 });
 
@@ -651,7 +624,6 @@ const abbDinRailSystems = category("din-rail-systems", "DIN-Rail Systems", {
       name: "SMISSLINE TP Modular System",
       description: "Touch-proof, tool-free modular switchgear system for fast installation.",
       price: 168.0,
-      image: "/images/abb/din-rail/smissline-tp.jpg",
       tags: ["Modular System", "Touch-Proof"],
     }),
     product({
@@ -678,7 +650,6 @@ const abbDinRailSystems = category("din-rail-systems", "DIN-Rail Systems", {
       name: "Modular Switch Disconnector Row",
       description: "Row-mounted switch disconnectors for isolating DIN-rail sub-circuits.",
       price: 47.0,
-      image: "/images/abb/din-rail/switch-disconnector-row.png",
       tags: ["Switch Disconnector", "DIN-Rail"],
     }),
   ],
@@ -722,7 +693,6 @@ const abbAutomation = category("automation", "Building Automation", {
 });
 
 const abbEnclosures = category("enclosures", "Enclosures & Distribution Boards", {
-  image: "/images/abb/enclosures/main-distribution-board.jpg",
   products: [
     product({
       id: "abb-main-distribution-board",
@@ -731,7 +701,6 @@ const abbEnclosures = category("enclosures", "Enclosures & Distribution Boards",
       description: "Floor-standing main distribution board for primary building power distribution.",
       price: 890.0,
       featured: true,
-      image: "/images/abb/enclosures/main-distribution-board.jpg",
       tags: ["Enclosure", "Distribution Board", "Main"],
       specs: [
         { label: "Mounting", value: "Floor-Standing" },
@@ -806,7 +775,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       description: "Motor soft starter reducing inrush current for smooth, controlled motor starts.",
       price: 285.0,
       featured: true,
-      image: "/images/abb/low-voltage/softstarters.png",
       tags: ["Soft Starter", "Motor Control"],
     }),
     product({
@@ -815,7 +783,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Limit Switches",
       description: "Heavy-duty limit switches for position sensing in industrial machinery.",
       price: 38.0,
-      image: "/images/abb/low-voltage/limit-switches.png",
       tags: ["Limit Switch", "Sensing"],
     }),
     product({
@@ -824,7 +791,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Machine Safety Relay",
       description: "Safety relay module for emergency stop and guard-door interlock circuits.",
       price: 96.0,
-      image: "/images/abb/low-voltage/machine-safety.png",
       tags: ["Machine Safety", "Relay"],
     }),
     product({
@@ -833,7 +799,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Installation Boxes",
       description: "Flush-mount installation boxes for switches, sockets, and junctions.",
       price: 4.9,
-      image: "/images/abb/low-voltage/installation-boxes.png",
       tags: ["Installation Box", "Accessories"],
     }),
     product({
@@ -843,7 +808,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       description: "DIN-rail energy meter for real-time consumption monitoring and reporting.",
       price: 112.0,
       featured: true,
-      image: "/images/abb/low-voltage/energy-efficiency.png",
       tags: ["Energy Monitoring", "Metering"],
     }),
     product({
@@ -852,7 +816,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Lamp Starters",
       description: "Fluorescent lamp starters for legacy lighting fixture retrofits.",
       price: 3.2,
-      image: "/images/abb/low-voltage/lamp-starters.png",
       tags: ["Lighting", "Starter"],
     }),
     product({
@@ -861,7 +824,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Busch-Jaeger Switching Material Set",
       description: "Base switching mechanisms compatible across Busch-Jaeger design frames.",
       price: 8.5,
-      image: "/images/abb/low-voltage/switching-material.png",
       tags: ["Switching Material", "Busch-Jaeger"],
     }),
     product({
@@ -870,7 +832,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Cable Protection Conduits & Couplings",
       description: "Flexible corrugated conduits and couplings for cable routing and protection.",
       price: 6.7,
-      image: "/images/abb/low-voltage/cable-protection.png",
       tags: ["Cable Protection", "Conduit"],
     }),
     product({
@@ -880,7 +841,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       description: "Air circuit breaker for main power distribution in commercial and industrial buildings.",
       price: 1450.0,
       featured: true,
-      image: "/images/abb/low-voltage/power-breakers.png",
       tags: ["Power Circuit Breaker", "Distribution"],
       specs: [
         { label: "Poles", value: "3P/4P" },
@@ -895,7 +855,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Pushbuttons & Signal Lamps",
       description: "Panel-mount pushbuttons and signal lamps for control cabinet interfaces.",
       price: 9.8,
-      image: "/images/abb/low-voltage/pushbuttons-signal-lamps.png",
       tags: ["Pushbutton", "Signal Lamp"],
     }),
     product({
@@ -904,7 +863,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Busbar Trunking System",
       description: "Modular busbar trunking for flexible, high-capacity power distribution runs.",
       price: 340.0,
-      image: "/images/abb/low-voltage/busbar-trunking.png",
       tags: ["Busbar", "Distribution"],
     }),
     product({
@@ -913,7 +871,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "PSTX45 Soft Starter Unit",
       description: "Compact soft starter unit for small to mid-size motor applications.",
       price: 198.0,
-      image: "/images/abb/low-voltage/pstx-softstarter.png",
       tags: ["Soft Starter", "Motor Control"],
     }),
     product({
@@ -922,7 +879,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Compact Modular Enclosure Rack",
       description: "Slide-out modular rack enclosure for control and protection device assemblies.",
       price: 265.0,
-      image: "/images/abb/low-voltage/modular-rack.png",
       tags: ["Enclosure", "Modular Rack"],
     }),
     product({
@@ -931,7 +887,6 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
       name: "Surface-Mount Wall Socket",
       description: "Round-frame surface-mount socket outlet for retrofit and renovation projects.",
       price: 12.4,
-      image: "/images/abb/low-voltage/wall-socket.jpg",
       tags: ["Socket", "Wiring Accessories"],
     }),
   ],

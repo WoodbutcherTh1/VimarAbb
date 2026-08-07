@@ -29,7 +29,7 @@ function IndustryCard({ industry, accentColor }: { industry: Industry; accentCol
       ref={cardRef}
       onMouseMove={handleMove}
       onMouseLeave={reset}
-      className="relative w-44 h-28 shrink-0 rounded-xl overflow-hidden border border-white/5 group"
+      className="relative w-36 h-24 shrink-0 rounded-xl overflow-hidden border border-white/5 group"
       style={{ transformStyle: "preserve-3d" }}
       animate={{ rotateX: tilt.rx, rotateY: tilt.ry, scale: tilt.rx || tilt.ry ? 1.06 : 1 }}
       transition={{ type: "spring", stiffness: 250, damping: 20 }}
