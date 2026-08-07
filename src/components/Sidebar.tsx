@@ -16,12 +16,14 @@ interface SidebarProps {
 function CategoryNode({
   category,
   depth,
+  index,
   activePath,
   onNavigate,
   accentColor,
 }: {
   category: Category;
   depth: number;
+  index: number;
   activePath: string[];
   onNavigate: (path: string[]) => void;
   accentColor: string;
@@ -45,43 +47,60 @@ function CategoryNode({
   };
 
   return (
-    <div className="select-none">
+    <motion.div
+      className="select-none"
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: depth === 0 ? index * 0.05 : 0, duration: 0.35, ease: "easeOut" }}
+    >
       <motion.button
         onClick={handleClick}
         className={cn(
-          "w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm transition-all group",
+          "relative w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm transition-colors group overflow-hidden",
           isActive
-            ? "bg-white/10 text-white font-medium"
+            ? "text-white font-medium"
             : "text-white/50 hover:text-white/80 hover:bg-white/5"
         )}
         style={{ paddingLeft: `${12 + depth * 16}px` }}
         whileHover={{ x: 2 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
-        {hasChildren ? (
+        {isActive && (
           <motion.div
-            animate={{ rotate: isOpen ? 90 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ChevronRight className="w-3.5 h-3.5 opacity-50" />
-          </motion.div>
-        ) : (
-          <Box className="w-3.5 h-3.5 opacity-30" />
+            layoutId="sidebar-active-pill"
+            className="absolute inset-0 rounded-lg bg-white/10"
+            style={{ boxShadow: `inset 2px 0 0 0 ${accentColor}` }}
+            transition={{ type: "spring", stiffness: 400, damping: 35 }}
+          />
         )}
 
-        {depth === 0 ? (
-          <Layers className="w-4 h-4" style={{ color: isActive ? accentColor : undefined }} />
-        ) : depth === 1 ? (
-          <FolderOpen className="w-4 h-4" style={{ color: isActive ? accentColor : undefined }} />
-        ) : null}
+        <span className="relative z-10 flex items-center gap-2 flex-1 min-w-0">
+          {hasChildren ? (
+            <motion.div
+              animate={{ rotate: isOpen ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="shrink-0"
+            >
+              <ChevronRight className="w-3.5 h-3.5 opacity-50" />
+            </motion.div>
+          ) : (
+            <Box className="w-3.5 h-3.5 opacity-30 shrink-0" />
+          )}
 
-        <span className="flex-1 truncate">{category.name}</span>
+          {depth === 0 ? (
+            <Layers className="w-4 h-4 shrink-0 transition-colors" style={{ color: isActive ? accentColor : undefined }} />
+          ) : depth === 1 ? (
+            <FolderOpen className="w-4 h-4 shrink-0 transition-colors" style={{ color: isActive ? accentColor : undefined }} />
+          ) : null}
 
-        {hasProducts && (
-          <span className="text-xs opacity-30 px-1.5 py-0.5 rounded-full bg-white/5">
-            {category.products.length}
-          </span>
-        )}
+          <span className="flex-1 truncate">{category.name}</span>
+
+          {hasProducts && (
+            <span className="text-xs opacity-30 px-1.5 py-0.5 rounded-full bg-white/5 shrink-0">
+              {category.products.length}
+            </span>
+          )}
+        </span>
       </motion.button>
 
       <AnimatePresence>
@@ -93,11 +112,12 @@ function CategoryNode({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            {category.children.map((child) => (
+            {category.children.map((child, i) => (
               <CategoryNode
                 key={child.id}
                 category={child}
                 depth={depth + 1}
+                index={i}
                 activePath={activePath}
                 onNavigate={onNavigate}
                 accentColor={accentColor}
@@ -106,7 +126,7 @@ function CategoryNode({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
@@ -117,11 +137,12 @@ export default function Sidebar({ categories, activePath, onNavigate, accentColo
         Categories
       </h3>
       <div className="space-y-0.5">
-        {categories.map((cat) => (
+        {categories.map((cat, i) => (
           <CategoryNode
             key={cat.id}
             category={cat}
             depth={0}
+            index={i}
             activePath={activePath}
             onNavigate={onNavigate}
             accentColor={accentColor}

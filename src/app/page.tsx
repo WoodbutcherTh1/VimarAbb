@@ -6,6 +6,7 @@ import { gsap } from "@/lib/gsap";
 import { brands, getCategoryByPath, getAllProducts, abbIndustries, Product } from "@/lib/data";
 import FluidBackground from "@/components/FluidBackground";
 import BrandBackgroundVideo from "@/components/BrandBackgroundVideo";
+import AmbientFX from "@/components/AmbientFX";
 import BrandSelector from "@/components/BrandSelector";
 import Sidebar from "@/components/Sidebar";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -22,6 +23,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [headerCompact, setHeaderCompact] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -106,30 +108,39 @@ export default function Home() {
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       <BrandBackgroundVideo brandId={activeBrandId} />
       <FluidBackground brandId={activeBrandId} />
+      <AmbientFX accentColor={activeBrand.accentColor} />
 
       {/* Header */}
       <header
         ref={headerRef}
-        className="relative z-20 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl"
+        className={`relative z-20 flex items-center justify-between border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl transition-all duration-300 ${
+          headerCompact ? "px-6 py-2.5" : "px-6 py-4"
+        }`}
       >
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <div
+            <motion.div
               className="hero-logo w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
               style={{
                 backgroundColor: activeBrand.accentColor,
                 color: activeBrand.id === "vimar" ? "#1a1a2e" : "#fff",
               }}
+              whileHover={{ rotate: -8, scale: 1.08 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
             >
               {activeBrand.logoText[0]}
-            </div>
-            <div className="hero-title-text">
+            </motion.div>
+            <div className="hero-title-text overflow-hidden">
               <h1 className="font-bold text-lg tracking-tight leading-none">
                 {activeBrand.logoText}
               </h1>
-              <p className="text-[10px] text-white/30 uppercase tracking-widest">
+              <motion.p
+                className="text-[10px] text-white/30 uppercase tracking-widest overflow-hidden"
+                animate={{ height: headerCompact ? 0 : "auto", opacity: headerCompact ? 0 : 1 }}
+                transition={{ duration: 0.25 }}
+              >
                 {activeBrand.tagline}
-              </p>
+              </motion.p>
             </div>
           </div>
         </div>
@@ -139,14 +150,17 @@ export default function Home() {
             <BrandSelector activeBrand={activeBrandId} onSelect={handleBrandChange} />
           </div>
 
-          <div className="hero-search hidden md:flex items-center relative">
-            <Search className="absolute left-3 w-4 h-4 text-white/30" />
+          <div className="hero-search hidden md:flex items-center relative group">
+            <Search className="absolute left-3 w-4 h-4 text-white/30 transition-colors group-focus-within:text-white/60" />
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2.5 w-64 rounded-xl bg-white/5 border border-white/5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/15 transition-colors"
+              className="pl-10 pr-4 py-2.5 w-64 rounded-xl bg-white/5 border border-white/5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/15 transition-all duration-300 focus:w-72"
+              style={{
+                boxShadow: searchQuery ? `0 0 0 3px ${activeBrand.accentColor}22` : undefined,
+              }}
             />
           </div>
 
@@ -154,6 +168,7 @@ export default function Home() {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors lg:hidden"
             whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
           >
             <Menu className="w-5 h-5 text-white/60" />
           </motion.button>
@@ -194,7 +209,10 @@ export default function Home() {
           )}
 
           {/* Products */}
-          <div className="flex-1 overflow-y-auto">
+          <div
+            className="flex-1 overflow-y-auto"
+            onScroll={(e) => setHeaderCompact(e.currentTarget.scrollTop > 24)}
+          >
             {displayedProducts.length > 0 ? (
               <ProductCarousel
                 products={displayedProducts}
