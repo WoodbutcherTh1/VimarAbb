@@ -16,6 +16,10 @@ import CategoryBanner from "@/components/CategoryBanner";
 import IndustriesShowcase from "@/components/IndustriesShowcase";
 import BrandLanding from "@/components/BrandLanding";
 import { Search, Menu, Grid3X3 } from "lucide-react";
+import { CartProvider } from "@/lib/cart-context";
+import CartIcon from "@/components/CartIcon";
+import CartDrawer from "@/components/CartDrawer";
+import OrderStatusBar from "@/components/OrderStatusBar";
 
 export default function Home() {
   const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
@@ -24,6 +28,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [headerCompact, setHeaderCompact] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -99,7 +104,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <CartProvider>
       <AnimatePresence>
         {!activeBrandId && <BrandLanding onSelect={handleBrandChange} />}
       </AnimatePresence>
@@ -164,6 +169,8 @@ export default function Home() {
             />
           </div>
 
+          <CartIcon onClick={() => setCartOpen(true)} accentColor={activeBrand.accentColor} />
+
           <motion.button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors lg:hidden"
@@ -203,6 +210,8 @@ export default function Home() {
             categories={activeBrand.categories}
             onNavigate={handleNavigate}
           />
+
+          <OrderStatusBar accentColor={activeBrand.accentColor} />
 
           <AnimatePresence mode="wait">
             {!searchQuery && currentCategory?.image && (
@@ -276,8 +285,10 @@ export default function Home() {
         accentColor={activeBrand.accentColor}
         onClose={() => setSelectedProduct(null)}
       />
+
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} accentColor={activeBrand.accentColor} />
     </div>
       )}
-    </>
+    </CartProvider>
   );
 }

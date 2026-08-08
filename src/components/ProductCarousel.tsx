@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Sparkles, Euro, ArrowUpRight } from "lucide-react";
 import { Product } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import PriceCounter from "@/components/PriceCounter";
 
 interface ProductCarouselProps {
   products: Product[];
@@ -112,12 +113,16 @@ export default function ProductCarousel({
       {/* Stage */}
       <div
         className="relative h-[440px] overflow-hidden select-none"
-        style={{ perspective: "1400px", cursor: isDragging ? "grabbing" : "grab" }}
+        style={{ cursor: isDragging ? "grabbing" : "grab" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
+      {/* 3D perspective is scoped to this inner wrapper only — keeping the
+          nav arrows outside it avoids browsers sorting siblings by 3D depth
+          instead of z-index, which was silently swallowing arrow clicks. */}
+      <div className="absolute inset-0" style={{ perspective: "1400px" }}>
         {/* Mirror floor gradient */}
         <div
           className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
@@ -204,7 +209,7 @@ export default function ProductCarousel({
                   }}
                 >
                   <div
-                    className="absolute inset-0 bg-cover bg-center"
+                    className="absolute inset-3 rounded-lg overflow-hidden bg-cover bg-center"
                     style={{ backgroundImage: `url(${product.image})` }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -233,7 +238,7 @@ export default function ProductCarousel({
                   }}
                 >
                   <div
-                    className="absolute inset-0 bg-cover bg-center"
+                    className="absolute inset-3 rounded-lg overflow-hidden bg-cover bg-center"
                     style={{ backgroundImage: `url(${product.image})` }}
                   />
                 </div>
@@ -241,6 +246,7 @@ export default function ProductCarousel({
             );
           })}
         </div>
+      </div>
 
         {/* Arrows */}
         <motion.button
@@ -336,28 +342,29 @@ export default function ProductCarousel({
           <p className="text-center text-white/40 text-sm leading-relaxed mb-6">
             {activeProduct.description}
           </p>
-
-          <div className="flex items-center justify-center gap-6">
-            <div className="flex items-baseline gap-1">
-              <Euro className="w-4 h-4 text-white/50" />
-              <span className="text-2xl font-bold tracking-tight text-white">
-                {activeProduct.price.toFixed(2)}
-              </span>
-              <span className="text-xs text-white/30 uppercase">{activeProduct.currency}</span>
-            </div>
-            <motion.button
-              onClick={() => onProductClick(activeProduct)}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-semibold uppercase tracking-wider text-white"
-              style={{ backgroundColor: accentColor }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              View Details
-              <ArrowUpRight className="w-4 h-4" />
-            </motion.button>
-          </div>
         </motion.div>
       </AnimatePresence>
+
+      {/* Kept outside the remounting block above so PriceCounter keeps a
+          stable instance across product switches and can track its last
+          settled value to decide whether to continue counting or reset. */}
+      <div className="flex items-center justify-center gap-6 max-w-2xl mx-auto px-6 pb-10 -mt-4">
+        <div className="flex items-baseline gap-1">
+          <Euro className="w-4 h-4 text-white/50" />
+          <PriceCounter value={activeProduct.price} className="text-2xl font-bold tracking-tight text-white" />
+          <span className="text-xs text-white/30 uppercase">{activeProduct.currency}</span>
+        </div>
+        <motion.button
+          onClick={() => onProductClick(activeProduct)}
+          className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-semibold uppercase tracking-wider text-white"
+          style={{ backgroundColor: accentColor }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          View Details
+          <ArrowUpRight className="w-4 h-4" />
+        </motion.button>
+      </div>
     </div>
   );
 }
