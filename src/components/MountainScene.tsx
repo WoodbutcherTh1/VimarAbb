@@ -2,7 +2,7 @@
 
 export default function MountainScene({ accentColor }: { accentColor: string }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 h-[55vh] pointer-events-none" style={{ zIndex: -1 }}>
+    <div className="fixed inset-x-0 bottom-0 h-[55vh] pointer-events-none" style={{ zIndex: -1, opacity: 0.15 }}>
       {/* horizon glow */}
       <div
         className="absolute inset-x-0 bottom-[38%] h-px"

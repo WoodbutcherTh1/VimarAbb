@@ -8,6 +8,7 @@ import MountainScene from "@/components/MountainScene";
 import BrandFloatCard from "@/components/BrandFloatCard";
 import CustomCursor from "@/components/CustomCursor";
 import ProductMosaic from "@/components/ProductMosaic";
+import CoasterRider from "@/components/CoasterRider";
 
 interface BrandLandingProps {
   onSelect: (brandId: string) => void;
@@ -108,13 +109,14 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
         style={{ zIndex: -2, opacity: exitingBrand ? 0 : 1 }}
       >
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-[0.55]"
+          className="absolute inset-0 bg-cover opacity-90"
           style={{
             backgroundImage: "url(/images/landing/hero-background.jpg)",
+            backgroundPosition: "center 75%",
             animation: "ken-burns 28s ease-in-out infinite alternate",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050507]/70 via-transparent to-[#050507]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050507]/55 via-transparent to-[#050507]" />
       </div>
 
       <MountainScene accentColor={ACCENT} />
@@ -144,15 +146,10 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
             animation: "ride-track 7s linear infinite",
           }}
         />
-        <circle
-          r="6"
-          fill={ACCENT}
-          filter="url(#spark-glow)"
-          style={{
-            offsetPath: "path('M 1088,1000 C 1250,900 1350,850 1450,860 C 1600,875 1750,1000 2048,1000')",
-            animation: "ride-track 8.5s linear infinite",
-            animationDelay: "1.2s",
-          }}
+        <CoasterRider
+          pathD="M 1088,1000 C 1250,900 1350,850 1450,860 C 1600,875 1750,1000 2048,1000"
+          durationS={8.5}
+          delayS={1.2}
         />
       </svg>
 
