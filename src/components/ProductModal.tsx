@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import { Product } from "@/lib/data";
 import { X, Euro, Check, Package, Shield, Zap, Award } from "lucide-react";
+import AddToCartButton from "@/components/AddToCartButton";
 
 interface ProductModalProps {
   product: Product | null;
@@ -202,15 +203,10 @@ export default function ProductModal({ product, accentColor, onClose }: ProductM
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-2">
-                    <motion.button
-                      className="flex-1 py-3.5 px-6 rounded-xl font-semibold text-sm uppercase tracking-wider text-white transition-all"
-                      style={{ backgroundColor: accentColor }}
-                      whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      Add to Quote
-                    </motion.button>
+                  <div className="flex gap-3 pt-2 items-start">
+                    <div className="flex-1">
+                      <AddToCartButton product={product} accentColor={accentColor} />
+                    </div>
                     <motion.button
                       className="p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
                       whileHover={{ scale: 1.05 }}
