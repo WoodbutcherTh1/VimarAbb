@@ -1,3 +1,5 @@
+import { withBasePath } from "@/lib/basePath";
+
 export interface ProductSpec {
   label: string;
   value: string;
@@ -925,7 +927,7 @@ const abbLowVoltage = category("low-voltage-products", "Low Voltage Product Fami
 // Brands
 // ---------------------------------------------------------------------------
 
-export const brands: Brand[] = [
+const rawBrands: Brand[] = [
   {
     id: "vimar",
     name: "Vimar",
@@ -944,6 +946,8 @@ export const brands: Brand[] = [
   },
 ];
 
+export const brands: Brand[] = withBasePath(rawBrands);
+
 // ---------------------------------------------------------------------------
 // Industries (ABB — showcase only, not part of the product catalog)
 // ---------------------------------------------------------------------------
@@ -953,7 +957,7 @@ export interface Industry {
   image: string;
 }
 
-export const abbIndustries: Industry[] = [
+const rawAbbIndustries: Industry[] = [
   { name: "Automotive", image: "/images/abb/industries/automotive.webp" },
   { name: "Battery", image: "/images/abb/industries/battery.webp" },
   { name: "Buildings", image: "/images/abb/industries/buildings.webp" },
@@ -990,6 +994,8 @@ export const abbIndustries: Industry[] = [
   { name: "Water and Wastewater", image: "/images/abb/industries/water-and-wastewater.webp" },
   { name: "Wind Power", image: "/images/abb/industries/wind-power.webp" },
 ];
+
+export const abbIndustries: Industry[] = withBasePath(rawAbbIndustries);
 
 // ---------------------------------------------------------------------------
 // Helpers

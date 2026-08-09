@@ -1,9 +1,11 @@
 "use client";
 
+import { withBasePath } from "@/lib/basePath";
+
 // Add "vimar": "/videos/vimar-background.mp4" once that clip is generated.
-const BRAND_VIDEOS: Record<string, string> = {
+const BRAND_VIDEOS: Record<string, string> = withBasePath({
   abb: "/videos/abb-background.mp4",
-};
+});
 
 export default function BrandBackgroundVideo({ brandId }: { brandId: string }) {
   const src = BRAND_VIDEOS[brandId];
