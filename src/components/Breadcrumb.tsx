@@ -9,9 +9,10 @@ interface BreadcrumbProps {
   path: string[];
   categories: Category[];
   onNavigate: (path: string[]) => void;
+  onHome: () => void;
 }
 
-export default function Breadcrumb({ brandName, path, categories, onNavigate }: BreadcrumbProps) {
+export default function Breadcrumb({ brandName, path, categories, onNavigate, onHome }: BreadcrumbProps) {
   const pathNames: { name: string; targetPath: string[] }[] = [];
 
   for (let i = 0; i <= path.length; i++) {
@@ -24,13 +25,24 @@ export default function Breadcrumb({ brandName, path, categories, onNavigate }: 
   }
 
   return (
-    <nav className="flex items-center gap-2 text-sm px-6 py-4 border-b border-white/5">
+    <nav className="flex items-center gap-2 text-sm px-4 md:px-6 py-4 border-b border-white/5 overflow-x-auto">
+      {/* Leftmost crumb leaves the brand entirely and returns to the landing;
+          the brand crumb after it only resets the category path. */}
+      <motion.button
+        onClick={onHome}
+        className="flex items-center gap-1.5 shrink-0 text-white/40 hover:text-white/70 transition-colors"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <Home className="w-3.5 h-3.5" />
+        Home
+      </motion.button>
       {pathNames.map((item, index) => (
-        <div key={index} className="flex items-center gap-2">
-          {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-white/20" />}
+        <div key={index} className="flex items-center gap-2 shrink-0">
+          <ChevronRight className="w-3.5 h-3.5 text-white/20" />
           <motion.button
             onClick={() => onNavigate(item.targetPath)}
-            className={`flex items-center gap-1.5 transition-colors ${
+            className={`flex items-center gap-1.5 whitespace-nowrap transition-colors ${
               index === pathNames.length - 1
                 ? "text-white font-medium"
                 : "text-white/40 hover:text-white/70"
@@ -38,7 +50,6 @@ export default function Breadcrumb({ brandName, path, categories, onNavigate }: 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {index === 0 && <Home className="w-3.5 h-3.5" />}
             {item.name}
           </motion.button>
         </div>

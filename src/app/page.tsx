@@ -131,6 +131,15 @@ function Showroom() {
     setSelectedProduct(null);
   };
 
+  // Clearing the brand drops back to the landing — before this there was no
+  // route back to it once a brand had been picked.
+  const handleBackToLanding = () => {
+    setActiveBrandId(null);
+    setActivePath([]);
+    setSelectedProduct(null);
+    setSearchQuery("");
+  };
+
   return (
     <>
       <AnimatePresence>
@@ -151,7 +160,12 @@ function Showroom() {
         }`}
       >
         <div className="flex items-center gap-6 min-w-0">
-          <div className="flex items-center gap-3 min-w-0">
+          <button
+            onClick={handleBackToLanding}
+            aria-label="Back to showroom home"
+            title="Back to showroom home"
+            className="flex items-center gap-3 min-w-0 rounded-xl hover:opacity-80 transition-opacity"
+          >
             <motion.div
               className="hero-logo shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
               style={{
@@ -177,7 +191,7 @@ function Showroom() {
                 {activeBrand.tagline}
               </motion.p>
             </div>
-          </div>
+          </button>
         </div>
 
         <div className="flex items-center gap-2 md:gap-4 shrink-0">
@@ -239,6 +253,7 @@ function Showroom() {
             path={activePath}
             categories={activeBrand.categories}
             onNavigate={handleNavigate}
+            onHome={handleBackToLanding}
           />
 
           {!searchQuery && currentCategory?.image && (
