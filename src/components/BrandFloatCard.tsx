@@ -45,10 +45,15 @@ export default function BrandFloatCard({
       data-cursor-hover
       data-brand={brand.id}
       onClick={() => onPick(brand.id)}
-      className="landing-card group absolute bottom-[24vh] w-48 h-64 md:w-60 md:h-80 rounded-2xl overflow-hidden border border-white/15 shadow-2xl"
+      className={[
+        "landing-card group absolute rounded-2xl overflow-hidden border border-white/15 shadow-2xl",
+        "w-32 h-48 sm:w-40 sm:h-56 md:w-60 md:h-80",
+        "bottom-[15vh] md:bottom-[24vh]",
+        tiltDeg < 0
+          ? "left-[6%] sm:left-[9%] md:left-[12%]"
+          : "right-[6%] sm:right-[9%] md:right-[12%]",
+      ].join(" ")}
       style={{
-        left: tiltDeg < 0 ? "12%" : undefined,
-        right: tiltDeg > 0 ? "12%" : undefined,
         transformOrigin: "center",
         animationName: isExiting || isOtherExiting ? "none" : "float-bob",
         animationDuration: `${floatDuration}s`,
@@ -87,17 +92,17 @@ export default function BrandFloatCard({
         style={{ boxShadow: `inset 0 0 0 2px ${brand.accentColor}` }}
       />
 
-      <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+      <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 text-left">
         <p
-          className="text-[9px] uppercase tracking-[0.25em] mb-1"
+          className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.25em] mb-1"
           style={{ color: brand.accentColor }}
         >
           {activeProduct.name} · {activeProduct.currency} {activeProduct.price.toFixed(0)}
         </p>
-        <h3 className="text-2xl font-bold tracking-tight text-white leading-none">
+        <h3 className="text-lg md:text-2xl font-bold tracking-tight text-white leading-none">
           {brand.logoText}
         </h3>
-        <p className="text-[11px] text-white/50 mt-1">{brand.tagline}</p>
+        <p className="text-[10px] md:text-[11px] text-white/50 mt-1">{brand.tagline}</p>
       </div>
 
       <div

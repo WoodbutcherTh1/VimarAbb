@@ -19,7 +19,7 @@ const WORDMARK = "SHOWROOM";
 function WordReveal({ lines }: { lines: string[] }) {
   let wordIndex = 0;
   return (
-    <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white leading-[1.15]">
+    <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-white leading-[1.15]">
       {lines.map((line, li) => (
         <span key={li} className="block">
           {line.split(" ").map((word, wi) => {
@@ -95,13 +95,13 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
         style={{ opacity: exitingBrand ? 0 : 1, transitionDelay: exitingBrand ? "200ms" : "0ms" }}
       >
         {/* Hero heading */}
-        <main className="flex flex-col items-center text-center pt-[8vh] px-6 w-full max-w-3xl mx-auto">
-          <div className="flex items-center gap-2 mb-4 text-white/40 text-xs uppercase tracking-[0.3em]">
+        <main className="flex flex-col items-center text-center pt-[5vh] md:pt-[8vh] px-6 w-full max-w-3xl mx-auto">
+          <div className="flex items-center gap-2 mb-3 md:mb-4 text-white/40 text-xs uppercase tracking-[0.3em]">
             <Zap className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             Elite Electrical Showroom
           </div>
           <WordReveal lines={["Two Brands.", "One Elite Showroom."]} />
-          <p className="text-white/40 mt-5 text-sm md:text-base max-w-md">
+          <p className="text-white/40 mt-3 md:mt-5 text-sm md:text-base max-w-md">
             Pick a universe — Vimar&apos;s Italian design, or ABB&apos;s engineered precision.
           </p>
         </main>
