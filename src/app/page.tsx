@@ -15,9 +15,42 @@ import ProductModal from "@/components/ProductModal";
 import CategoryBanner from "@/components/CategoryBanner";
 import IndustriesShowcase from "@/components/IndustriesShowcase";
 import BrandLanding from "@/components/BrandLanding";
-import { Search, Menu, Grid3X3 } from "lucide-react";
+import QuotePanel from "@/components/QuotePanel";
+import { QuoteProvider, useQuote } from "@/lib/quote";
+import { Search, Menu, Grid3X3, FileText } from "lucide-react";
 
 export default function Home() {
+  return (
+    <QuoteProvider>
+      <Showroom />
+    </QuoteProvider>
+  );
+}
+
+function QuoteButton({ accentColor }: { accentColor: string }) {
+  const { count, setOpen } = useQuote();
+  return (
+    <motion.button
+      onClick={() => setOpen(true)}
+      aria-label={`Open quote (${count} item${count !== 1 ? "s" : ""})`}
+      className="relative p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <FileText className="w-5 h-5 text-white/60" />
+      {count > 0 && (
+        <span
+          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-black"
+          style={{ backgroundColor: accentColor }}
+        >
+          {count}
+        </span>
+      )}
+    </motion.button>
+  );
+}
+
+function Showroom() {
   const [activeBrandId, setActiveBrandId] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<string[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -166,6 +199,8 @@ export default function Home() {
             />
           </div>
 
+          <QuoteButton accentColor={activeBrand.accentColor} />
+
           <motion.button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors lg:hidden"
@@ -250,8 +285,11 @@ export default function Home() {
       <ProductModal
         product={selectedProduct}
         accentColor={activeBrand.accentColor}
+        brandId={activeBrand.id}
         onClose={() => setSelectedProduct(null)}
       />
+
+      <QuotePanel accentColor={activeBrand.accentColor} />
     </div>
       )}
     </>

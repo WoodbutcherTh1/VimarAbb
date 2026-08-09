@@ -1,19 +1,33 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import { Product } from "@/lib/data";
+import { useQuote } from "@/lib/quote";
 import { X, Euro, Check, Package, Shield, Zap, Award } from "lucide-react";
 
 interface ProductModalProps {
   product: Product | null;
   accentColor: string;
+  brandId: string;
   onClose: () => void;
 }
 
-export default function ProductModal({ product, accentColor, onClose }: ProductModalProps) {
+export default function ProductModal({ product, accentColor, brandId, onClose }: ProductModalProps) {
   const priceRef = useRef<HTMLSpanElement>(null);
+  const { add, setOpen, count } = useQuote();
+  // Track which product the confirmation belongs to rather than a bare
+  // boolean, so moving to another product clears it without an effect.
+  const [addedFor, setAddedFor] = useState<string | null>(null);
+  const justAdded = !!product && addedFor === product.id;
+
+  const handleAdd = () => {
+    if (!product) return;
+    add(product, brandId);
+    setAddedFor(product.id);
+    window.setTimeout(() => setAddedFor((cur) => (cur === product.id ? null : cur)), 1800);
+  };
 
   useEffect(() => {
     if (product) {
@@ -204,19 +218,37 @@ export default function ProductModal({ product, accentColor, onClose }: ProductM
 
                   <div className="flex gap-3 pt-2">
                     <motion.button
-                      className="flex-1 py-3.5 px-6 rounded-xl font-semibold text-sm uppercase tracking-wider text-white transition-all"
+                      onClick={handleAdd}
+                      disabled={!product.inStock}
+                      className="flex-1 py-3.5 px-6 rounded-xl font-semibold text-sm uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
                       style={{ backgroundColor: accentColor }}
-                      whileHover={{ scale: 1.02, filter: "brightness(1.1)" }}
-                      whileTap={{ scale: 0.98 }}
+                      whileHover={product.inStock ? { scale: 1.02, filter: "brightness(1.1)" } : undefined}
+                      whileTap={product.inStock ? { scale: 0.98 } : undefined}
                     >
-                      Add to Quote
+                      {justAdded ? (
+                        <>
+                          <Check className="w-4 h-4" /> Added
+                        </>
+                      ) : (
+                        "Add to Quote"
+                      )}
                     </motion.button>
                     <motion.button
-                      className="p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                      onClick={() => setOpen(true)}
+                      aria-label="View quote"
+                      className="relative p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       <Package className="w-5 h-5 text-white/60" />
+                      {count > 0 && (
+                        <span
+                          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-black"
+                          style={{ backgroundColor: accentColor }}
+                        >
+                          {count}
+                        </span>
+                      )}
                     </motion.button>
                   </div>
                 </motion.div>
