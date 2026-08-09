@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import { brands } from "@/lib/data";
 import { withBasePath } from "@/lib/basePath";
-import MountainScene from "@/components/MountainScene";
 import FluidBackground from "@/components/FluidBackground";
 import AmbientFX from "@/components/AmbientFX";
 import BrandBackgroundVideo from "@/components/BrandBackgroundVideo";
@@ -86,32 +85,40 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
       transition={{ duration: 0.4 }}
     >
       <CustomCursor label="Enter ⇢" accentColor={ACCENT} />
-      {/* Backdrop stack, back to front: video, mountains (z -1), particles, glow. */}
+      {/* Backdrop stack, back to front: video, particles, glow. The footage
+          carries the scene now, so the drawn mountain range is gone. */}
       <BrandBackgroundVideo brandId="landing" zIndex={-3} opacityClass="opacity-60" />
       <FluidBackground brandId="landing" />
       <AmbientFX accentColor={ACCENT} />
-      <MountainScene accentColor={ACCENT} />
 
-      {/* top vignette */}
+      {/* top + bottom vignette, to seat the content over the footage */}
       <div
-        className="fixed inset-x-0 top-0 h-[40vh] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 90% 100% at 50% 0%, rgba(0,0,0,0.9), transparent 70%)" }}
+        className="fixed inset-x-0 top-0 h-[45vh] pointer-events-none z-[2]"
+        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.55) 45%, transparent)" }}
       />
+      <div
+        className="fixed inset-x-0 bottom-0 h-[35vh] pointer-events-none z-[2]"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.9), transparent)" }}
+      />
+
+      {/* Showroom mark, top-left */}
+      <div className="landing-logo fixed top-5 left-5 z-20 flex items-center gap-2.5">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={withBasePath("/logo.svg")} alt="" width={40} height={40} className="w-9 h-9 md:w-10 md:h-10" />
+        <div className="leading-none">
+          <p className="font-bold tracking-tight text-white text-base md:text-lg">KAHANA</p>
+          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.22em] text-white/40 mt-0.5">
+            Electrical
+          </p>
+        </div>
+      </div>
 
       <div
         className="relative z-10 h-full flex flex-col items-center transition-opacity duration-300"
         style={{ opacity: exitingBrand ? 0 : 1, transitionDelay: exitingBrand ? "200ms" : "0ms" }}
       >
         {/* Hero heading */}
-        <main className="flex flex-col items-center text-center pt-[5vh] md:pt-[8vh] px-6 w-full max-w-3xl mx-auto">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={withBasePath("/logo.svg")}
-            alt=""
-            width={56}
-            height={56}
-            className="landing-logo w-12 h-12 md:w-14 md:h-14 mb-3 md:mb-4"
-          />
+        <main className="flex flex-col items-center text-center pt-[14vh] md:pt-[12vh] px-6 w-full max-w-3xl mx-auto">
           <div className="flex items-center gap-2 mb-3 md:mb-4 text-white/40 text-xs uppercase tracking-[0.3em]">
             <Zap className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             Elite Electrical Showroom
