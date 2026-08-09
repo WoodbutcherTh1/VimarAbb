@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Sparkles, Euro, ArrowUpRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles, ArrowUpRight } from "lucide-react";
 import { Product } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { PRICE_COLOR } from "@/lib/showroomConfig";
+import PriceCounter from "@/components/PriceCounter";
 
 interface ProductCarouselProps {
   products: Product[];
@@ -275,13 +275,12 @@ export default function ProductCarousel({
           </p>
 
           <div className="flex items-center justify-center gap-6">
-            <div className="flex items-baseline gap-1" style={{ color: PRICE_COLOR }}>
-              <Euro className="w-4 h-4 opacity-70" />
-              <span className="text-2xl font-bold tracking-tight">
-                {activeProduct.price.toFixed(2)}
-              </span>
-              <span className="text-xs uppercase opacity-60">{activeProduct.currency}</span>
-            </div>
+            <PriceCounter
+              value={activeProduct.price}
+              currency={activeProduct.currency}
+              resetKey={activeProduct.id}
+              className="flex items-baseline gap-1"
+            />
             <motion.button
               onClick={() => onProductClick(activeProduct)}
               className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-semibold uppercase tracking-wider text-white"

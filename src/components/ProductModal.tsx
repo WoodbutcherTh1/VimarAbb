@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "@/lib/gsap";
 import { Product } from "@/lib/data";
 import { useQuote } from "@/lib/quote";
-import { PRICE_COLOR } from "@/lib/showroomConfig";
-import { X, Euro, Check, Package, Shield, Zap, Award } from "lucide-react";
+import PriceCounter from "@/components/PriceCounter";
+import { X, Check, Package, Shield, Zap, Award } from "lucide-react";
 
 interface ProductModalProps {
   product: Product | null;
@@ -16,7 +15,6 @@ interface ProductModalProps {
 }
 
 export default function ProductModal({ product, accentColor, brandId, onClose }: ProductModalProps) {
-  const priceRef = useRef<HTMLSpanElement>(null);
   const { add, setOpen, count } = useQuote();
   // Track which product the confirmation belongs to rather than a bare
   // boolean, so moving to another product clears it without an effect.
@@ -38,23 +36,6 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
     }
     return () => {
       document.body.style.overflow = "";
-    };
-  }, [product]);
-
-  useEffect(() => {
-    if (!product || !priceRef.current) return;
-    const counter = { value: 0 };
-    const tween = gsap.to(counter, {
-      value: product.price,
-      duration: 0.9,
-      delay: 0.35,
-      ease: "power2.out",
-      onUpdate: () => {
-        if (priceRef.current) priceRef.current.textContent = counter.value.toFixed(2);
-      },
-    });
-    return () => {
-      tween.kill();
     };
   }, [product]);
 
@@ -198,13 +179,16 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   <div className="flex items-end justify-between">
                     <div>
                       <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Unit Price</p>
-                      <div className="flex items-baseline gap-2" style={{ color: PRICE_COLOR }}>
-                        <Euro className="w-6 h-6 opacity-70" />
-                        <span className="text-4xl font-bold tracking-tight">
-                          <span ref={priceRef}>0.00</span>
-                        </span>
-                        <span className="text-sm font-medium opacity-60">{product.currency}</span>
-                      </div>
+                      <PriceCounter
+                        value={product.price}
+                        currency={product.currency}
+                        resetKey={product.id}
+                        className="flex items-baseline gap-2"
+                        iconClassName="w-6 h-6 opacity-70"
+                        numberClassName="text-4xl font-bold tracking-tight"
+                        currencyClassName="text-sm font-medium opacity-60"
+                        delay={0.35}
+                      />
                       <p className="text-xs text-white/20 mt-1">Excluding VAT • Shipping calculated at checkout</p>
                     </div>
                     <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${
