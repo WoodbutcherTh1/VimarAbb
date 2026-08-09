@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Brand, Product, getAllProducts } from "@/lib/data";
+import { PRICE_COLOR } from "@/lib/showroomConfig";
 
 interface BrandFloatCardProps {
   brand: Brand;
@@ -105,7 +106,10 @@ export default function BrandFloatCard({
           className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.25em] mb-1 line-clamp-2"
           style={{ color: brand.accentColor }}
         >
-          {activeProduct.name} · {activeProduct.currency} {activeProduct.price.toFixed(0)}
+          {activeProduct.name}{" "}
+          <span style={{ color: PRICE_COLOR }}>
+            · {activeProduct.currency} {activeProduct.price.toFixed(0)}
+          </span>
         </p>
         <h3 className="text-lg md:text-2xl font-bold tracking-tight text-white leading-none">
           {brand.logoText}

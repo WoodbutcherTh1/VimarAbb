@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Minus, Plus, Trash2, Copy, Check, Mail, MessageCircle } from "lucide-react";
 import { useQuote, formatQuote } from "@/lib/quote";
-import { SHOWROOM_CONTACT } from "@/lib/showroomConfig";
+import { SHOWROOM_CONTACT, PRICE_COLOR } from "@/lib/showroomConfig";
 
 export default function QuotePanel({ accentColor }: { accentColor: string }) {
   const { lines, total, currency, count, setQty, remove, clear, isOpen, setOpen } = useQuote();
@@ -100,7 +100,7 @@ export default function QuotePanel({ accentColor }: { accentColor: string }) {
                           <Plus className="w-3.5 h-3.5" />
                         </button>
                       </div>
-                      <span className="text-sm font-semibold tabular-nums">
+                      <span className="text-sm font-semibold tabular-nums" style={{ color: PRICE_COLOR }}>
                         {l.currency} {(l.price * l.qty).toFixed(2)}
                       </span>
                     </div>
@@ -113,7 +113,10 @@ export default function QuotePanel({ accentColor }: { accentColor: string }) {
               <footer className="border-t border-white/10 px-5 py-4 space-y-3">
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm text-white/50">Total (excl. VAT)</span>
-                  <span className="text-2xl font-bold tracking-tight tabular-nums">
+                  <span
+                    className="text-2xl font-bold tracking-tight tabular-nums"
+                    style={{ color: PRICE_COLOR }}
+                  >
                     {currency} {total.toFixed(2)}
                   </span>
                 </div>

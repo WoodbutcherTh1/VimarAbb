@@ -8,6 +8,7 @@ import { withBasePath } from "@/lib/basePath";
 import MountainScene from "@/components/MountainScene";
 import FluidBackground from "@/components/FluidBackground";
 import AmbientFX from "@/components/AmbientFX";
+import BrandBackgroundVideo from "@/components/BrandBackgroundVideo";
 import BrandFloatCard from "@/components/BrandFloatCard";
 import CustomCursor from "@/components/CustomCursor";
 
@@ -85,6 +86,8 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
       transition={{ duration: 0.4 }}
     >
       <CustomCursor label="Enter ⇢" accentColor={ACCENT} />
+      {/* Backdrop stack, back to front: video, mountains (z -1), particles, glow. */}
+      <BrandBackgroundVideo brandId="landing" zIndex={-3} opacityClass="opacity-60" />
       <FluidBackground brandId="landing" />
       <AmbientFX accentColor={ACCENT} />
       <MountainScene accentColor={ACCENT} />

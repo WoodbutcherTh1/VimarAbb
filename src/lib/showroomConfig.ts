@@ -11,3 +11,6 @@ export const SHOWROOM_CONTACT = {
 };
 
 export const QUOTE_STORAGE_KEY = "vimarabb.quote.v1";
+
+/** Prices read in green everywhere, independent of the active brand accent. */
+export const PRICE_COLOR = "#39ff8f";

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import { Product } from "@/lib/data";
 import { useQuote } from "@/lib/quote";
+import { PRICE_COLOR } from "@/lib/showroomConfig";
 import { X, Euro, Check, Package, Shield, Zap, Award } from "lucide-react";
 
 interface ProductModalProps {
@@ -197,12 +198,12 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   <div className="flex items-end justify-between">
                     <div>
                       <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Unit Price</p>
-                      <div className="flex items-baseline gap-2">
-                        <Euro className="w-6 h-6 text-white/60" />
+                      <div className="flex items-baseline gap-2" style={{ color: PRICE_COLOR }}>
+                        <Euro className="w-6 h-6 opacity-70" />
                         <span className="text-4xl font-bold tracking-tight">
                           <span ref={priceRef}>0.00</span>
                         </span>
-                        <span className="text-sm text-white/30 font-medium">{product.currency}</span>
+                        <span className="text-sm font-medium opacity-60">{product.currency}</span>
                       </div>
                       <p className="text-xs text-white/20 mt-1">Excluding VAT • Shipping calculated at checkout</p>
                     </div>
