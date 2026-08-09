@@ -113,14 +113,14 @@ export default function Home() {
       {/* Header */}
       <header
         ref={headerRef}
-        className={`relative z-20 flex items-center justify-between border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl transition-all duration-300 ${
-          headerCompact ? "px-6 py-2.5" : "px-6 py-4"
+        className={`relative z-20 flex items-center justify-between gap-3 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl transition-all duration-300 ${
+          headerCompact ? "px-4 md:px-6 py-2.5" : "px-4 md:px-6 py-4"
         }`}
       >
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6 min-w-0">
+          <div className="flex items-center gap-3 min-w-0">
             <motion.div
-              className="hero-logo w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
+              className="hero-logo shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
               style={{
                 backgroundColor: activeBrand.accentColor,
                 color: activeBrand.id === "vimar" ? "#1a1a2e" : "#fff",
@@ -130,12 +130,14 @@ export default function Home() {
             >
               {activeBrand.logoText[0]}
             </motion.div>
-            <div className="hero-title-text overflow-hidden">
-              <h1 className="font-bold text-lg tracking-tight leading-none">
+            {/* On a phone the badge plus the VIMAR/ABB switcher already name the
+                brand, and this block's text was wrapping the nav off-screen. */}
+            <div className="hero-title-text hidden sm:block overflow-hidden min-w-0">
+              <h1 className="font-bold text-lg tracking-tight leading-none truncate">
                 {activeBrand.logoText}
               </h1>
               <motion.p
-                className="text-[10px] text-white/30 uppercase tracking-widest overflow-hidden"
+                className="text-[10px] text-white/30 uppercase tracking-widest overflow-hidden whitespace-nowrap"
                 animate={{ height: headerCompact ? 0 : "auto", opacity: headerCompact ? 0 : 1 }}
                 transition={{ duration: 0.25 }}
               >
@@ -145,7 +147,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           <div className="hero-brand-selector">
             <BrandSelector activeBrand={activeBrandId} onSelect={handleBrandChange} />
           </div>

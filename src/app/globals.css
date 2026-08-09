@@ -51,6 +51,15 @@ body {
 }
 
 /* Landing hero: word/letter reveal + floating product + cursor glow */
+.landing-logo {
+  opacity: 0;
+  animation: logo-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes logo-reveal {
+  0% { opacity: 0; transform: scale(0.7) rotate(-10deg); filter: blur(12px); }
+  100% { opacity: 1; transform: scale(1) rotate(0); filter: blur(0); }
+}
+
 .word-wrapper {
   display: inline-block;
   overflow: hidden;

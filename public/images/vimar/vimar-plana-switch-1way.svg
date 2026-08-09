@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <radialGradient id="g-bg" cx="50%" cy="38%" r="72%">
+      <stop offset="0" stop-color="#1c1d24"/>
+      <stop offset="1" stop-color="#08080b"/>
+    </radialGradient>
+    <linearGradient id="g-satin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f1eb"/>
+      <stop offset="0.45" stop-color="#e2ded6"/>
+      <stop offset="1" stop-color="#c4c0b7"/>
+    </linearGradient>
+    <linearGradient id="g-anthracite" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3d3f47"/>
+      <stop offset="0.5" stop-color="#2b2d34"/>
+      <stop offset="1" stop-color="#1c1e23"/>
+    </linearGradient>
+    <linearGradient id="g-recess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a9a59c"/>
+      <stop offset="1" stop-color="#d8d4cc"/>
+    </linearGradient>
+    <radialGradient id="g-shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#g-bg)"/>
+  <ellipse cx="300" cy="470" rx="190" ry="40" fill="url(#g-shadow)"/>
+
+  <g>
+    <rect x="160" y="150" width="280" height="280" rx="30" fill="url(#g-satin)"/>
+    <rect x="160" y="150" width="280" height="280" rx="30" fill="none" stroke="#b8b4ab" stroke-width="2"/>
+    <rect x="176" y="166" width="248" height="248" rx="22" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1.5"/>
+    <rect x="222" y="222" width="156" height="156" rx="18" fill="url(#g-recess)"/>
+    <rect x="230" y="230" width="140" height="140" rx="14" fill="#efebe4"/>
+    <path d="M230 300 h140" stroke="#c3bfb6" stroke-width="2"/>
+    <rect x="230" y="230" width="140" height="70" rx="14" fill="#f6f3ed"/>
+    <circle cx="300" cy="264" r="6" fill="#c9a227" opacity="0.8"/>
+  </g>
+
+  <rect x="160" y="150" width="280" height="280" rx="30" fill="none" stroke="#c9a227" stroke-opacity="0.35" stroke-width="1.5"/>
+</svg>

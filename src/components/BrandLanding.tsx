@@ -4,7 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import { brands } from "@/lib/data";
+import { withBasePath } from "@/lib/basePath";
 import MountainScene from "@/components/MountainScene";
+import FluidBackground from "@/components/FluidBackground";
+import AmbientFX from "@/components/AmbientFX";
 import BrandFloatCard from "@/components/BrandFloatCard";
 import CustomCursor from "@/components/CustomCursor";
 
@@ -82,6 +85,8 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
       transition={{ duration: 0.4 }}
     >
       <CustomCursor label="Enter ⇢" accentColor={ACCENT} />
+      <FluidBackground brandId="landing" />
+      <AmbientFX accentColor={ACCENT} />
       <MountainScene accentColor={ACCENT} />
 
       {/* top vignette */}
@@ -96,6 +101,14 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
       >
         {/* Hero heading */}
         <main className="flex flex-col items-center text-center pt-[5vh] md:pt-[8vh] px-6 w-full max-w-3xl mx-auto">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={withBasePath("/logo.svg")}
+            alt=""
+            width={56}
+            height={56}
+            className="landing-logo w-12 h-12 md:w-14 md:h-14 mb-3 md:mb-4"
+          />
           <div className="flex items-center gap-2 mb-3 md:mb-4 text-white/40 text-xs uppercase tracking-[0.3em]">
             <Zap className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             Elite Electrical Showroom

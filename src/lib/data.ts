@@ -41,7 +41,9 @@ function product(overrides: Partial<Product> & Pick<Product, "id" | "sku" | "nam
     description: "Premium electrical component engineered for reliability and modern design.",
     price: 49.9,
     currency: "EUR",
-    image: `https://picsum.photos/seed/${overrides.id}/600/600`,
+    // Vimar has no product photography here — scripts/generate-vimar-art.mjs
+    // draws a stand-in per product id. ABB entries override this with a real photo.
+    image: `/images/vimar/${overrides.id}.svg`,
     inStock: true,
     featured: false,
     tags: [],

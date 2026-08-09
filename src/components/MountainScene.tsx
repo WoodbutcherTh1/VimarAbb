@@ -23,19 +23,33 @@ export default function MountainScene({ accentColor }: { accentColor: string }) 
         preserveAspectRatio="none"
         className="absolute inset-0 w-full h-full"
       >
+        {/* Ridges lighten toward the back so the range reads against the
+            near-black page. Each also carries a hairline accent rim. */}
         <polygon
           points="0,500 0,260 220,160 420,300 640,120 900,280 1120,140 1340,290 1600,180 1600,500"
-          fill="#0a0a0f"
-          opacity="0.55"
+          fill="#22242e"
+        />
+        <polyline
+          points="0,260 220,160 420,300 640,120 900,280 1120,140 1340,290 1600,180"
+          fill="none"
+          stroke={accentColor}
+          strokeOpacity="0.28"
+          strokeWidth="2"
         />
         <polygon
           points="0,500 0,340 260,220 500,360 760,200 1020,360 1280,220 1600,340 1600,500"
-          fill="#08080c"
-          opacity="0.75"
+          fill="#161821"
+        />
+        <polyline
+          points="0,340 260,220 500,360 760,200 1020,360 1280,220 1600,340"
+          fill="none"
+          stroke={accentColor}
+          strokeOpacity="0.16"
+          strokeWidth="2"
         />
         <polygon
           points="0,500 0,420 300,340 620,440 950,320 1280,430 1600,360 1600,500"
-          fill="#050507"
+          fill="#0c0d13"
         />
       </svg>
 

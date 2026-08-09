@@ -86,7 +86,15 @@ export default function BrandFloatCard({
         </AnimatePresence>
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/10" />
+      {/* Scrim: the label sits directly on the product art, so the lower half
+          needs to go near-opaque or the text is unreadable on a phone. */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.94) 40%, rgba(0,0,0,0.55) 58%, rgba(0,0,0,0.12) 100%)",
+        }}
+      />
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{ boxShadow: `inset 0 0 0 2px ${brand.accentColor}` }}
@@ -94,7 +102,7 @@ export default function BrandFloatCard({
 
       <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 text-left">
         <p
-          className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.25em] mb-1"
+          className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.25em] mb-1 line-clamp-2"
           style={{ color: brand.accentColor }}
         >
           {activeProduct.name} · {activeProduct.currency} {activeProduct.price.toFixed(0)}

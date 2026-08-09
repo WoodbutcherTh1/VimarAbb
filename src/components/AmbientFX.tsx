@@ -24,9 +24,26 @@ export default function AmbientFX({ accentColor }: { accentColor: string }) {
     window.addEventListener("mousemove", handleMove);
     apply();
 
+    // Touch devices never fire mousemove, which would pin the spotlight dead
+    // centre forever. Drift it slowly instead so the light still breathes.
+    const isTouch = window.matchMedia("(hover: none)").matches;
+    let driftRaf = 0;
+    if (isTouch) {
+      const start = performance.now();
+      const drift = (now: number) => {
+        const t = (now - start) / 1000;
+        x = window.innerWidth * (0.5 + 0.28 * Math.sin(t * 0.22));
+        y = window.innerHeight * (0.42 + 0.22 * Math.cos(t * 0.17));
+        apply();
+        driftRaf = requestAnimationFrame(drift);
+      };
+      driftRaf = requestAnimationFrame(drift);
+    }
+
     return () => {
       window.removeEventListener("mousemove", handleMove);
       if (raf) cancelAnimationFrame(raf);
+      if (driftRaf) cancelAnimationFrame(driftRaf);
     };
   }, [accentColor]);
 

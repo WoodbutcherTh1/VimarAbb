@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // This project builds to dist/ (next.config.ts distDir), which the
+    // defaults above don't cover — without it lint walks the bundles.
+    "dist/**",
   ]),
 ]);
 

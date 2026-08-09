@@ -40,7 +40,8 @@ export default function FluidBackground({ brandId }: { brandId: string }) {
       time += 0.005;
 
       // Draw gradient orbs
-      const accentColor = brandId === "vimar" ? "201, 162, 39" : "255, 0, 0";
+      const accentColor =
+        brandId === "vimar" ? "201, 162, 39" : brandId === "abb" ? "255, 0, 0" : "57, 255, 143";
 
       particles.forEach((p, i) => {
         p.x += p.vx + Math.sin(time + i) * 0.1;
@@ -51,9 +52,12 @@ export default function FluidBackground({ brandId }: { brandId: string }) {
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
+        // The landing's green reads much hotter than the brand golds/reds,
+        // so it gets a lighter hand.
+        const intensity = brandId === "landing" ? 0.55 : 1;
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 40);
-        gradient.addColorStop(0, `rgba(${accentColor}, ${p.alpha * 0.4})`);
-        gradient.addColorStop(0.5, `rgba(${accentColor}, ${p.alpha * 0.1})`);
+        gradient.addColorStop(0, `rgba(${accentColor}, ${p.alpha * 0.4 * intensity})`);
+        gradient.addColorStop(0.5, `rgba(${accentColor}, ${p.alpha * 0.1 * intensity})`);
         gradient.addColorStop(1, "rgba(0,0,0,0)");
 
         ctx.fillStyle = gradient;
