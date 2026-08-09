@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 260" width="1000" height="260" role="img" aria-label="VimarAbb Showroom by WoodbutcherTh1">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050507"/><stop offset="1" stop-color="#0b1410"/>
+    </linearGradient>
+    <linearGradient id="volt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#39ff8f"/><stop offset="1" stop-color="#8affc0"/>
+    </linearGradient>
+    <style>
+      .rise { opacity:0; animation: rise .8s cubic-bezier(.16,1,.3,1) forwards; }
+      .d2 { animation-delay:.3s } .d3 { animation-delay:.55s }
+      @keyframes rise { to { opacity:1; transform: translateY(0) } }
+      .spark { stroke-dasharray: 300; stroke-dashoffset: 300; animation: dash 2.4s ease-in-out infinite; }
+      @keyframes dash { 0% { stroke-dashoffset: 300; opacity:0 } 20% { opacity:1 } 70% { stroke-dashoffset: 0; opacity:1 } 100% { stroke-dashoffset: 0; opacity:0 } }
+      .flick { animation: flick 3s ease-in-out infinite; }
+      @keyframes flick { 0%,100% { opacity:1 } 45% { opacity:.5 } 47% { opacity:1 } 60% { opacity:.35 } 62% { opacity:1 } }
+      .glow { animation: glow 2.4s ease-in-out infinite; }
+      @keyframes glow { 0%,100% { opacity:.2 } 50% { opacity:.55 } }
+      .tog { animation: tog 3.4s ease-in-out infinite; }
+      @keyframes tog { 0%,45% { transform: translateY(0) } 55%,100% { transform: translateY(30px) } }
+      .swap { animation: swap 4s ease-in-out infinite; }
+      @keyframes swap { 0%,42% { opacity:1 } 50%,92% { opacity:0 } 100% { opacity:1 } }
+      .swap2 { animation: swap2 4s ease-in-out infinite; }
+      @keyframes swap2 { 0%,42% { opacity:0 } 50%,92% { opacity:1 } 100% { opacity:0 } }
+    </style>
+  </defs>
+  <rect width="1000" height="260" fill="url(#bg)"/>
+  <ellipse class="glow" cx="500" cy="130" rx="420" ry="120" fill="#39ff8f"/>
+
+  <!-- lightning bolt logo -->
+  <g class="flick" transform="translate(60,58)">
+    <rect x="0" y="0" width="70" height="70" rx="16" fill="#0e1a14" stroke="url(#volt)" stroke-width="2"/>
+    <path d="M40 12 L20 40 L34 40 L28 58 L48 30 L34 30 Z" fill="url(#volt)"/>
+  </g>
+
+  <text class="rise" x="150" y="92" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="46" font-weight="800" letter-spacing="-1" fill="#f2fff8" transform="translate(0,10)">Vimar &#215; ABB <tspan fill="url(#volt)">Showroom</tspan></text>
+  <text class="rise d2" x="152" y="126" font-family="ui-monospace,Menlo,monospace" font-size="15" fill="#8affc0" transform="translate(0,8)">Two brands, one cinematic catalog · Next.js 16 static export</text>
+
+  <!-- price counter mimic: 0.00 -> value -->
+  <g transform="translate(152,150)" font-family="ui-monospace,Menlo,monospace" font-size="18" font-weight="700">
+    <text class="swap" x="0" y="14" fill="#5b6">EUR 0.00</text>
+    <text class="swap2" x="0" y="14" fill="#39ff8f">EUR 18.50</text>
+  </g>
+
+  <g class="rise d3" transform="translate(0,6)" font-family="ui-monospace,Menlo,monospace" font-size="13" fill="#d7ffe9">
+    <rect x="152" y="182" width="150" height="28" rx="14" fill="#39ff8f" fill-opacity="0.12" stroke="#39ff8f" stroke-opacity="0.4"/><text x="166" y="201">@WoodbutcherTh1</text>
+    <rect x="312" y="182" width="94" height="28" rx="14" fill="#39ff8f" fill-opacity="0.12" stroke="#39ff8f" stroke-opacity="0.4"/><text x="326" y="201">Next.js 16</text>
+    <rect x="416" y="182" width="72" height="28" rx="14" fill="#39ff8f" fill-opacity="0.12" stroke="#39ff8f" stroke-opacity="0.4"/><text x="430" y="201">React</text>
+    <rect x="498" y="182" width="104" height="28" rx="14" fill="#39ff8f" fill-opacity="0.12" stroke="#39ff8f" stroke-opacity="0.4"/><text x="512" y="201">GitHub Pages</text>
+  </g>
+
+  <!-- right: light switch toggling + spark arc -->
+  <rect x="812" y="70" width="96" height="120" rx="14" fill="#12140f" stroke="url(#volt)" stroke-opacity="0.5" stroke-width="2"/>
+  <rect x="836" y="86" width="48" height="88" rx="10" fill="#0b0d09" stroke="#39ff8f" stroke-opacity="0.3"/>
+  <rect class="tog" x="842" y="92" width="36" height="40" rx="8" fill="url(#volt)"/>
+  <path class="spark" d="M760 130 q20 -30 40 0 q20 30 40 0" fill="none" stroke="#8affc0" stroke-width="2.5" stroke-linecap="round"/>
+
+  <rect x="0" y="256" width="1000" height="4" fill="url(#volt)"/>
+</svg>

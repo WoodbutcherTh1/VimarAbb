@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`VimarAbb`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+<img src="assets/banner.svg" alt="Vimar × ABB Showroom — two brands, one cinematic catalog" width="100%">
 
-First, run the development server:
+# Vimar × ABB Showroom
+
+**A cinematic, two-brand electrical products showroom.**
+
+Pick a universe — Vimar's Italian design or ABB's engineered precision — and browse
+the catalog in a 3D coverflow. Built by [@WoodbutcherTh1](https://github.com/WoodbutcherTh1)
+with Next.js 16, React 19, TypeScript and Tailwind v4, shipped as a static export to GitHub Pages.
+
+**Live:** https://woodbutcherth1.github.io/VimarAbb/
+
+</div>
+
+---
+
+## Highlights
+
+- **Brand landing** — animated video backdrop, floating brand cards, then a full-motion
+  transition into the chosen showroom. A logo lockup returns you home from anywhere.
+- **Product browsing** — 3D coverflow carousel, sidebar categories, breadcrumb, and a
+  detail modal.
+- **Price counter** — each price counts up from `0.00` to the real figure, then settles
+  into green to mark it final.
+- **Add to Quote** — a persistent basket (saved to `localStorage`, synced across tabs)
+  that a customer sends to the showroom over WhatsApp, email, or a copied list.
+- **Mobile-first** — verified on iPhone SE / 13 and desktop with no horizontal overflow.
+
+## Tech stack
+
+| Layer | Tool |
+|-------|------|
+| Framework | Next.js 16 (App Router, `output: "export"`) |
+| Runtime | React 19 |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Animation | Framer Motion + GSAP |
+| Hosting | GitHub Pages (GitHub Actions workflow) |
+
+## Develop
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build      # static export to dist/
+```
 
-## Learn More
+The GitHub Actions workflow at `.github/workflows/deploy-pages.yml` builds with
+`NEXT_PUBLIC_BASE_PATH=/VimarAbb` and publishes `dist/` to Pages on every push to `main`.
 
-To learn more about Next.js, take a look at the following resources:
+## Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Quote destinations live in `src/lib/showroomConfig.ts` — set `whatsappNumber` and `email`
+to enable the send buttons on the quote panel (until then, "Copy list" carries the flow).
