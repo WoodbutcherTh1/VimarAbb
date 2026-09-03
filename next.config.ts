@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // The Freebuff preview is served through a *.daytonaproxy01.net proxy;
+  // allow that origin to reach dev-only assets (HMR) during development.
+  allowedDevOrigins: ['*.daytonaproxy01.net'],
 };
 
 export default nextConfig;

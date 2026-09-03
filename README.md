@@ -1,32 +1,45 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="Vimar × ABB Showroom — two brands, one cinematic catalog" width="100%">
+<img src="public/logo.svg" alt="KAHANA Electrical" width="72" />
 
-# Vimar × ABB Showroom
+# KAHANA Electrical
 
-**A cinematic, two-brand electrical products showroom.**
+**A professional, two-brand showroom for Vimar and ABB electrical solutions.**
 
-Pick a universe — Vimar's Italian design or ABB's engineered precision — and browse
-the catalog in a 3D coverflow. Built by [@WoodbutcherTh1](https://github.com/WoodbutcherTh1)
-with Next.js 16, React 19, TypeScript and Tailwind v4, shipped as a static export to GitHub Pages.
+KAHANA Electrical presents a curated catalog of premium electrical products —
+Vimar's Italian design and ABB's engineered precision — with a clean,
+business-first browsing experience and a quote flow that goes straight to
+WhatsApp or email.
 
-**Live:** https://woodbutcherth1.github.io/VimarAbb/
+Built with Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS 4,
+shipped as a static export.
 
 </div>
 
 ---
 
+## Pages
+
+| Route | What's there |
+|-------|--------------|
+| `/` | Home — hero with full-catalog search, brand cards, featured products, why-us, and quote CTA |
+| `/vimar` | Vimar catalog — Plana, Eikon, and Smart Home collections |
+| `/abb` | ABB catalog — Busch-Jaeger ranges, circuit protection, automation, enclosures, low voltage |
+| `/contact` | Contact & quotes — config-driven channels plus catalog links |
+
 ## Highlights
 
-- **Brand landing** — animated video backdrop, floating brand cards, then a full-motion
-  transition into the chosen showroom. A logo lockup returns you home from anywhere.
-- **Product browsing** — 3D coverflow carousel, sidebar categories, breadcrumb, and a
-  detail modal.
-- **Price counter** — each price counts up from `0.00` to the real figure, then settles
-  into green to mark it final.
-- **Add to Quote** — a persistent basket (saved to `localStorage`, synced across tabs)
-  that a customer sends to the showroom over WhatsApp, email, or a copied list.
-- **Mobile-first** — verified on iPhone SE / 13 and desktop with no horizontal overflow.
+- **Consistent branding** — KAHANA Electrical name, navy + amber identity, and a
+  unified header/footer across every page.
+- **Easy catalog browsing** — nested category sidebar with product counts,
+  grid and list views, per-brand search (desktop *and* mobile), and breadcrumbs.
+- **Quote flow** — build a list with "Add to Quote", adjust quantities, then send
+  it over WhatsApp, email, or the clipboard. Persisted in `localStorage` and
+  synced across tabs.
+- **Mobile-first** — category drawer and search work on phones; no hidden
+  navigation.
+- **Business essentials** — config-driven contact details in the footer, contact
+  page, and floating WhatsApp button.
 
 ## Tech stack
 
@@ -36,8 +49,8 @@ with Next.js 16, React 19, TypeScript and Tailwind v4, shipped as a static expor
 | Runtime | React 19 |
 | Language | TypeScript 5 |
 | Styling | Tailwind CSS 4 |
-| Animation | Framer Motion + GSAP |
-| Hosting | GitHub Pages (GitHub Actions workflow) |
+| Animation | Framer Motion + GSAP (restrained: drawers, modal, price counter) |
+| Hosting | GitHub Pages (GitHub Actions workflow) or any static host |
 
 ## Develop
 
@@ -55,9 +68,15 @@ npm run build      # static export to dist/
 ```
 
 The GitHub Actions workflow at `.github/workflows/deploy-pages.yml` builds with
-`NEXT_PUBLIC_BASE_PATH=/VimarAbb` and publishes `dist/` to Pages on every push to `main`.
+`NEXT_PUBLIC_BASE_PATH=/VimarAbb` and publishes `dist/` to Pages on every push
+to `main`.
 
 ## Configuration
 
-Quote destinations live in `src/lib/showroomConfig.ts` — set `whatsappNumber` and `email`
-to enable the send buttons on the quote panel (until then, "Copy list" carries the flow).
+All business contact details live in `src/lib/showroomConfig.ts` — set
+`whatsappNumber`, `email`, `phone`, `address`, and `hours` to enable the send
+buttons, footer contact column, contact page, and floating WhatsApp button.
+Empty fields are hidden automatically.
+
+The product catalog (brands, categories, products, images) lives in
+`src/lib/data.ts`.

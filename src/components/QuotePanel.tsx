@@ -6,7 +6,7 @@ import { X, Minus, Plus, Trash2, Copy, Check, Mail, MessageCircle } from "lucide
 import { useQuote, formatQuote } from "@/lib/quote";
 import { SHOWROOM_CONTACT, PRICE_COLOR } from "@/lib/showroomConfig";
 
-export default function QuotePanel({ accentColor }: { accentColor: string }) {
+export default function QuotePanel() {
   const { lines, total, currency, count, setQty, remove, clear, isOpen, setOpen } = useQuote();
   const [copied, setCopied] = useState(false);
 
@@ -29,14 +29,14 @@ export default function QuotePanel({ accentColor }: { accentColor: string }) {
       {isOpen && (
         <>
           <motion.div
-            className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[80] bg-navy-950/50 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setOpen(false)}
           />
           <motion.aside
-            className="fixed inset-y-0 right-0 z-[81] w-full sm:w-[420px] bg-[#0c0d12] border-l border-white/10 flex flex-col"
+            className="fixed inset-y-0 right-0 z-[81] flex w-full flex-col bg-white shadow-2xl sm:w-[420px]"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -44,63 +44,70 @@ export default function QuotePanel({ accentColor }: { accentColor: string }) {
             role="dialog"
             aria-label="Quote request"
           >
-            <header className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+            <header className="flex items-center justify-between border-b border-line px-5 py-4">
               <div>
-                <h2 className="font-bold tracking-tight">Your Quote</h2>
-                <p className="text-xs text-white/40">
+                <h2 className="text-base font-bold text-navy-900">Your Quote</h2>
+                <p className="text-xs text-muted">
                   {count} item{count !== 1 ? "s" : ""}
                 </p>
               </div>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close quote"
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-muted transition-colors hover:bg-slate-50 hover:text-navy-900"
               >
-                <X className="w-5 h-5 text-white/60" />
+                <X className="h-4 w-4" />
               </button>
             </header>
 
             {lines.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center px-8 text-white/30">
-                <p className="font-medium">No items yet</p>
-                <p className="text-sm mt-1">Open a product and choose “Add to Quote”.</p>
+              <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+                <p className="text-sm font-medium text-navy-900">No items yet</p>
+                <p className="mt-1 text-sm text-muted">
+                  Open a product and choose “Add to Quote”.
+                </p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+              <div className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
                 {lines.map((l) => (
-                  <div key={l.id} className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                  <div key={l.id} className="rounded-xl border border-line bg-slate-50/60 p-3.5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium leading-tight">{l.name}</p>
-                        <p className="text-[11px] text-white/35 mt-0.5">{l.sku}</p>
+                        <p className="truncate text-sm font-medium text-navy-900">{l.name}</p>
+                        <p className="mt-0.5 text-[11px] text-muted">{l.sku}</p>
                       </div>
                       <button
                         onClick={() => remove(l.id)}
                         aria-label={`Remove ${l.name}`}
-                        className="p-1.5 rounded-lg hover:bg-white/10 transition-colors shrink-0"
+                        className="shrink-0 rounded-lg p-1.5 text-muted transition-colors hover:bg-red-50 hover:text-red-600"
                       >
-                        <Trash2 className="w-4 h-4 text-white/40" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
-                    <div className="flex items-center justify-between mt-3">
+                    <div className="mt-3 flex items-center justify-between">
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => setQty(l.id, l.qty - 1)}
                           aria-label={`Decrease quantity of ${l.name}`}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-white text-muted transition-colors hover:text-navy-900"
                         >
-                          <Minus className="w-3.5 h-3.5" />
+                          <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="w-9 text-center text-sm font-semibold tabular-nums">{l.qty}</span>
+                        <span className="w-9 text-center text-sm font-semibold tabular-nums text-navy-900">
+                          {l.qty}
+                        </span>
                         <button
                           onClick={() => setQty(l.id, l.qty + 1)}
                           aria-label={`Increase quantity of ${l.name}`}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                          className="flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-white text-muted transition-colors hover:text-navy-900"
                         >
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                      <span className="text-sm font-semibold tabular-nums" style={{ color: PRICE_COLOR }}>
+                      <span
+                        className="text-sm font-semibold tabular-nums"
+                        style={{ color: PRICE_COLOR }}
+                      >
                         {l.currency} {(l.price * l.qty).toFixed(2)}
                       </span>
                     </div>
@@ -110,47 +117,44 @@ export default function QuotePanel({ accentColor }: { accentColor: string }) {
             )}
 
             {lines.length > 0 && (
-              <footer className="border-t border-white/10 px-5 py-4 space-y-3">
+              <footer className="border-t border-line bg-slate-50/60 px-5 py-4">
                 <div className="flex items-baseline justify-between">
-                  <span className="text-sm text-white/50">Total (excl. VAT)</span>
-                  <span
-                    className="text-2xl font-bold tracking-tight tabular-nums"
-                    style={{ color: PRICE_COLOR }}
-                  >
-                    {currency} {total.toFixed(2)}
+                  <span className="text-sm text-muted">Total (excl. VAT)</span>
+                  <span className="text-2xl font-bold tracking-tight tabular-nums text-navy-900">
+                    <span style={{ color: PRICE_COLOR }}>{currency}</span>{" "}
+                    {total.toFixed(2)}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-2">
+                <div className="mt-4 grid grid-cols-1 gap-2">
                   {SHOWROOM_CONTACT.whatsappNumber && (
                     <a
                       href={`https://wa.me/${SHOWROOM_CONTACT.whatsappNumber}?text=${encodeURIComponent(text)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm uppercase tracking-wider text-white"
-                      style={{ backgroundColor: accentColor }}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-[#25d366] py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
                     >
-                      <MessageCircle className="w-4 h-4" /> Send on WhatsApp
+                      <MessageCircle className="h-4 w-4" /> Send on WhatsApp
                     </a>
                   )}
                   {SHOWROOM_CONTACT.email && (
                     <a
                       href={`mailto:${SHOWROOM_CONTACT.email}?subject=${encodeURIComponent("Quote request")}&body=${encodeURIComponent(text)}`}
-                      className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 font-semibold text-sm uppercase tracking-wider transition-colors"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
                     >
-                      <Mail className="w-4 h-4" /> Email the showroom
+                      <Mail className="h-4 w-4" /> Email the showroom
                     </a>
                   )}
                   <button
                     onClick={handleCopy}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 font-semibold text-sm uppercase tracking-wider transition-colors"
+                    className="flex items-center justify-center gap-2 rounded-xl border border-line bg-white py-3 text-sm font-semibold text-navy-900 transition-colors hover:bg-slate-50"
                   >
-                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copied ? "Copied" : "Copy list"}
                   </button>
                   <button
                     onClick={clear}
-                    className="py-2 text-xs text-white/35 hover:text-white/60 transition-colors"
+                    className="py-2 text-xs text-muted transition-colors hover:text-red-600"
                   >
                     Clear quote
                   </button>

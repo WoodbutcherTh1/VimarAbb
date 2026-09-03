@@ -5,16 +5,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/data";
 import { useQuote } from "@/lib/quote";
 import PriceCounter from "@/components/PriceCounter";
-import { X, Check, Package, Shield, Zap, Award } from "lucide-react";
+import { X, Check, Package, Shield, Award, Zap } from "lucide-react";
 
 interface ProductModalProps {
   product: Product | null;
-  accentColor: string;
+  accentDark: string;
   brandId: string;
   onClose: () => void;
 }
 
-export default function ProductModal({ product, accentColor, brandId, onClose }: ProductModalProps) {
+export default function ProductModal({
+  product,
+  accentDark,
+  brandId,
+  onClose,
+}: ProductModalProps) {
   const { add, setOpen, count } = useQuote();
   // Track which product the confirmation belongs to rather than a bare
   // boolean, so moving to another product clears it without an effect.
@@ -39,6 +44,15 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
     };
   }, [product]);
 
+  useEffect(() => {
+    if (!product) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [product, onClose]);
+
   if (!product) return null;
 
   return (
@@ -52,7 +66,7 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-navy-950/60 backdrop-blur-sm"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -61,234 +75,142 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
 
           {/* Modal Content */}
           <motion.div
-            layoutId={`product-${product.id}`}
-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#12121a] border border-white/10 shadow-2xl"
-            initial={{ scale: 0.85, y: 40, opacity: 0 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={product.name}
+            className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-line bg-white shadow-2xl"
+            initial={{ scale: 0.96, y: 24, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.85, y: 40, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            exit={{ scale: 0.96, y: 24, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 28 }}
           >
-            {/* Close Button */}
-            <motion.button
+            <button
               onClick={onClose}
-              className="absolute top-6 right-6 z-10 p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-              whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
+              aria-label="Close product details"
+              className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-line bg-white text-muted shadow-sm transition-colors hover:text-navy-900"
             >
-              <X className="w-5 h-5 text-white/60" />
-            </motion.button>
+              <X className="h-4 w-4" />
+            </button>
 
-            <div className="grid md:grid-cols-2 gap-0">
-              {/* Left: Image with Explode Effect */}
-              <div className="relative aspect-square md:aspect-auto md:h-full overflow-hidden bg-gradient-to-br from-white/5 to-transparent p-8 flex items-center justify-center">
-                {/* Explode layers */}
-                <motion.div
-                  className="absolute inset-0 bg-cover bg-center opacity-20 blur-3xl"
+            <div className="grid md:grid-cols-2">
+              {/* Image */}
+              <div className="relative aspect-square bg-slate-100 md:aspect-auto md:min-h-[420px]">
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${product.image})` }}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1.5, opacity: 0.15 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
                 />
-
-                {/* Layer 1: Back glow */}
-                <motion.div
-                  className="absolute w-64 h-64 rounded-full blur-[80px]"
-                  style={{ backgroundColor: accentColor }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 0.15 }}
-                  transition={{ delay: 0.1, duration: 0.6 }}
-                />
-
-                {/* Layer 2: Product image */}
-                <motion.div
-                  className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden shadow-2xl border border-white/10"
-                  initial={{ rotateY: -15, rotateX: 10, scale: 0.8, opacity: 0 }}
-                  animate={{ rotateY: 0, rotateX: 0, scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.15, type: "spring", stiffness: 200, damping: 20 }}
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  <div
-                    className="w-full h-full bg-cover bg-center"
-                    style={{ backgroundImage: `url(${product.image})` }}
-                  />
-
-                  {/* Inner mechanism overlay - "exploded" view simulation */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
-                  />
-                </motion.div>
-
-                {/* Layer 3: Floating spec chips */}
-                <motion.div
-                  className="absolute bottom-8 left-8 right-8 flex flex-wrap gap-2 justify-center"
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, type: "spring", stiffness: 150 }}
-                >
-                  {product.tags.map((tag, i) => (
-                    <motion.span
-                      key={tag}
-                      className="px-3 py-1.5 rounded-full text-xs font-medium bg-black/40 backdrop-blur-md border border-white/10 text-white/80"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.5 + i * 0.08, type: "spring", stiffness: 300 }}
-                    >
-                      {tag}
-                    </motion.span>
-                  ))}
-                </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/25 to-transparent" />
               </div>
 
-              {/* Right: Details */}
-              <div className="p-8 md:p-10 space-y-8">
-                {/* Header */}
-                <motion.div
-                  className="space-y-3"
-                  initial={{ x: 20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white/5 text-white/40 border border-white/5">
-                      {product.sku}
+              {/* Details */}
+              <div className="flex flex-col p-6 sm:p-8">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-md bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted">
+                    {product.sku}
+                  </span>
+                  {product.featured && (
+                    <span
+                      className="rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+                      style={{ backgroundColor: `${accentDark}14`, color: accentDark }}
+                    >
+                      Featured
                     </span>
-                    {product.featured && (
-                      <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-white/10" style={{ color: accentColor, backgroundColor: `${accentColor}15` }}>
-                        Featured
+                  )}
+                  <span
+                    className={
+                      product.inStock
+                        ? "flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700"
+                        : "flex items-center gap-1 rounded-md bg-red-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-red-700"
+                    }
+                  >
+                    {product.inStock ? (
+                      <Check className="h-3 w-3" />
+                    ) : (
+                      <X className="h-3 w-3" />
+                    )}
+                    {product.inStock ? "In stock" : "Out of stock"}
+                  </span>
+                </div>
+
+                <h2 className="mt-3 text-2xl font-bold tracking-tight text-navy-900 sm:text-3xl">
+                  {product.name}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  {product.description}
+                </p>
+
+                <div className="mt-5 flex items-baseline gap-2">
+                  <PriceCounter
+                    value={product.price}
+                    currency={product.currency}
+                    resetKey={product.id}
+                    numberClassName="text-3xl font-bold tracking-tight"
+                    iconClassName="h-5 w-5 opacity-80"
+                  />
+                  <span className="text-xs text-muted">excl. VAT</span>
+                </div>
+
+                <div className="mt-6 flex gap-2.5">
+                  <button
+                    onClick={handleAdd}
+                    disabled={!product.inStock}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+                    style={{ backgroundColor: accentDark }}
+                  >
+                    {justAdded ? (
+                      <>
+                        <Check className="h-4 w-4" /> Added to quote
+                      </>
+                    ) : (
+                      "Add to Quote"
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setOpen(true)}
+                    aria-label="View quote"
+                    className="relative flex w-12 items-center justify-center rounded-xl border border-line text-muted transition-colors hover:bg-slate-50 hover:text-navy-900"
+                  >
+                    <Package className="h-5 w-5" />
+                    {count > 0 && (
+                      <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-bold text-white">
+                        {count}
                       </span>
                     )}
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-                    {product.name}
-                  </h2>
-                  <p className="text-white/50 leading-relaxed text-base">
-                    {product.description}
-                  </p>
-                </motion.div>
+                  </button>
+                </div>
 
-                {/* Price Block */}
-                <motion.div
-                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <div className="flex items-end justify-between">
-                    <div>
-                      <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Unit Price</p>
-                      <PriceCounter
-                        value={product.price}
-                        currency={product.currency}
-                        resetKey={product.id}
-                        className="flex items-baseline gap-2"
-                        iconClassName="w-6 h-6 opacity-70"
-                        numberClassName="text-4xl font-bold tracking-tight"
-                        currencyClassName="text-sm font-medium opacity-60"
-                        delay={0.35}
-                      />
-                      <p className="text-xs text-white/20 mt-1">Excluding VAT • Shipping calculated at checkout</p>
-                    </div>
-                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${
-                      product.inStock
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-red-500/10 text-red-400 border border-red-500/20"
-                    }`}>
-                      {product.inStock ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
-                      {product.inStock ? "Available" : "Unavailable"}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 pt-2">
-                    <motion.button
-                      onClick={handleAdd}
-                      disabled={!product.inStock}
-                      className="flex-1 py-3.5 px-6 rounded-xl font-semibold text-sm uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: accentColor }}
-                      whileHover={product.inStock ? { scale: 1.02, filter: "brightness(1.1)" } : undefined}
-                      whileTap={product.inStock ? { scale: 0.98 } : undefined}
-                    >
-                      {justAdded ? (
-                        <>
-                          <Check className="w-4 h-4" /> Added
-                        </>
-                      ) : (
-                        "Add to Quote"
-                      )}
-                    </motion.button>
-                    <motion.button
-                      onClick={() => setOpen(true)}
-                      aria-label="View quote"
-                      className="relative p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Package className="w-5 h-5 text-white/60" />
-                      {count > 0 && (
-                        <span
-                          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-black"
-                          style={{ backgroundColor: accentColor }}
-                        >
-                          {count}
-                        </span>
-                      )}
-                    </motion.button>
-                  </div>
-                </motion.div>
-
-                {/* Specs Grid - Exploded/Reveal Layout */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4 flex items-center gap-2">
-                    <Zap className="w-3.5 h-3.5" style={{ color: accentColor }} />
-                    Technical Specifications
+                {/* Specs */}
+                <div className="mt-7">
+                  <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted">
+                    <Zap className="h-3.5 w-3.5" style={{ color: accentDark }} />
+                    Technical specifications
                   </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {product.specs.map((spec, index) => (
-                      <motion.div
+                  <div className="mt-3 grid grid-cols-2 gap-2.5">
+                    {product.specs.map((spec) => (
+                      <div
                         key={spec.label}
-                        className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
-                        initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{
-                          delay: 0.45 + index * 0.06,
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 25,
-                        }}
+                        className="rounded-xl border border-line bg-slate-50/60 p-3"
                       >
-                        <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1 group-hover:text-white/40 transition-colors">
+                        <p className="text-[10px] uppercase tracking-wider text-muted">
                           {spec.label}
                         </p>
-                        <p className="text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+                        <p className="mt-0.5 text-sm font-semibold text-navy-900">
                           {spec.value}
                         </p>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Trust badges */}
-                <motion.div
-                  className="flex items-center gap-6 pt-4 border-t border-white/5"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                >
-                  <div className="flex items-center gap-2 text-white/30 text-xs">
-                    <Shield className="w-4 h-4" />
-                    <span>Secure Transaction</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-white/30 text-xs">
-                    <Award className="w-4 h-4" />
-                    <span>Original Product</span>
-                  </div>
-                </motion.div>
+                <div className="mt-6 flex items-center gap-5 border-t border-line pt-4 text-xs text-muted">
+                  <span className="flex items-center gap-1.5">
+                    <Shield className="h-4 w-4" /> Genuine products
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Award className="h-4 w-4" /> Manufacturer warranty
+                  </span>
+                </div>
               </div>
             </div>
           </motion.div>

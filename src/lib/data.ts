@@ -32,7 +32,10 @@ export interface Brand {
   name: string;
   logoText: string;
   tagline: string;
+  /** Used on dark surfaces (hero bands, filled buttons). */
   accentColor: string;
+  /** Used on light surfaces where the raw accent is too low-contrast. */
+  accentDark: string;
   categories: Category[];
 }
 
@@ -936,6 +939,7 @@ const rawBrands: Brand[] = [
     logoText: "VIMAR",
     tagline: "Italian Design Electrical Solutions",
     accentColor: "#c9a227",
+    accentDark: "#9a7b12",
     categories: [vimarPlana, vimarEikon, vimarSmartHome],
   },
   {
@@ -944,6 +948,7 @@ const rawBrands: Brand[] = [
     logoText: "ABB",
     tagline: "Engineering the Future",
     accentColor: "#ff0000",
+    accentDark: "#c81e2e",
     categories: [abbBuschJaeger, abbCircuitProtection, abbAutomation, abbEnclosures, abbLowVoltage],
   },
 ];
@@ -1017,15 +1022,25 @@ export function getCategoryByPath(categories: Category[], path: string[]): Categ
 }
 
 export function getAllProducts(brand: Brand): Product[] {
+  return getProductsInCategories(brand.categories);
+}
+
+/** All products inside a category, including its descendants. */
+export function getProductsInCategories(categories: Category[]): Product[] {
   const products: Product[] = [];
 
-  const walk = (categories: Category[]) => {
-    for (const cat of categories) {
+  const walk = (cats: Category[]) => {
+    for (const cat of cats) {
       products.push(...cat.products);
       if (cat.children.length) walk(cat.children);
     }
   };
 
-  walk(brand.categories);
+  walk(categories);
   return products;
+}
+
+/** Product count inside a category, including its descendants. */
+export function countProductsInCategory(category: Category): number {
+  return getProductsInCategories([category]).length;
 }
