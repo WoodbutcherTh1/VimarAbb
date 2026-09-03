@@ -8,6 +8,9 @@ import { BASE_PATH as basePath } from "./src/lib/basePath.generated";
 
 const nextConfig: NextConfig = {
   output: 'export',
+  // Emit vimar/index.html instead of vimar.html so GitHub Pages resolves
+  // both /vimar and /vimar/ without a 404.
+  trailingSlash: true,
   distDir: 'dist',
   basePath,
   assetPrefix: basePath,
