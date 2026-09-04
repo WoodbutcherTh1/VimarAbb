@@ -4,11 +4,17 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Minus, Plus, Trash2, Copy, Check, Mail, MessageCircle } from "lucide-react";
 import { useQuote, formatQuote } from "@/lib/quote";
+import { useDialog } from "@/lib/useDialog";
 import { SHOWROOM_CONTACT, PRICE_COLOR } from "@/lib/showroomConfig";
 
 export default function QuotePanel() {
   const { lines, total, currency, count, setQty, remove, clear, isOpen, setOpen } = useQuote();
   const [copied, setCopied] = useState(false);
+
+  // WCAG dialog behavior: focus moves in on open, Tab is trapped, Escape
+  // closes (only while focus is inside this dialog — so when the quote panel
+  // sits on top of the product modal, Escape closes just the panel).
+  const panelRef = useDialog({ isOpen, onClose: () => setOpen(false) });
 
   const text = formatQuote(lines, total, currency);
 
@@ -36,17 +42,21 @@ export default function QuotePanel() {
             onClick={() => setOpen(false)}
           />
           <motion.aside
+            ref={panelRef}
             className="fixed inset-y-0 right-0 z-[81] flex w-full flex-col bg-white shadow-2xl sm:w-[420px]"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 34 }}
             role="dialog"
-            aria-label="Quote request"
+            aria-modal="true"
+            aria-labelledby="quote-panel-title"
           >
             <header className="flex items-center justify-between border-b border-line px-5 py-4">
               <div>
-                <h2 className="text-base font-bold text-navy-900">Your Quote</h2>
+                <h2 id="quote-panel-title" className="text-base font-bold text-navy-900">
+                  Your Quote
+                </h2>
                 <p className="text-xs text-muted">
                   {count} item{count !== 1 ? "s" : ""}
                 </p>

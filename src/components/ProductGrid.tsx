@@ -5,7 +5,7 @@ import { Plus, Check, Sparkles, ArrowUpRight } from "lucide-react";
 import { Product } from "@/lib/data";
 import { useQuote } from "@/lib/quote";
 import { PRICE_COLOR } from "@/lib/showroomConfig";
-import { cn } from "@/lib/utils";
+import { cn, readableTextOn } from "@/lib/utils";
 
 interface ProductGridProps {
   products: Product[];
@@ -78,10 +78,10 @@ function AddButton({
       aria-label={`Add ${product.name} to quote`}
       className={cn(
         "flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors disabled:cursor-not-allowed disabled:opacity-40",
-        added ? "bg-emerald-600 text-white" : "text-white",
+        added ? "bg-emerald-600 text-white" : "",
         className
       )}
-      style={added ? undefined : { backgroundColor: accentDark }}
+      style={added ? undefined : { backgroundColor: accentDark, color: readableTextOn(accentDark) }}
     >
       {added ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
       {added ? "Added" : "Add to quote"}

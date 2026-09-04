@@ -26,7 +26,7 @@ export default function SiteHeader() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-black/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
@@ -34,7 +34,7 @@ export default function SiteHeader() {
           className="shrink-0"
           onClick={() => setMenuOpen(false)}
         >
-          <Logo />
+          <Logo variant="light" />
         </Link>
 
         {/* Desktop nav */}
@@ -46,8 +46,8 @@ export default function SiteHeader() {
               className={cn(
                 "rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                 isActive(item.href)
-                  ? "bg-navy-900/5 text-navy-900"
-                  : "text-muted hover:bg-slate-100 hover:text-navy-900"
+                  ? "bg-white/10 text-white"
+                  : "text-white/60 hover:bg-white/5 hover:text-white"
               )}
             >
               {item.label}
@@ -59,7 +59,7 @@ export default function SiteHeader() {
           {SHOWROOM_CONTACT.phone && (
             <a
               href={`tel:${SHOWROOM_CONTACT.phone.replace(/[^+\d]/g, "")}`}
-              className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-navy-900 lg:flex"
+              className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 transition-colors hover:text-white lg:flex"
             >
               <Phone className="h-4 w-4" />
               {SHOWROOM_CONTACT.phone}
@@ -69,7 +69,7 @@ export default function SiteHeader() {
           <button
             onClick={() => setOpen(true)}
             aria-label={`Open quote (${count} item${count !== 1 ? "s" : ""})`}
-            className="relative flex h-10 items-center gap-2 rounded-lg border border-line bg-white px-3.5 text-sm font-semibold text-navy-900 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
+            className="relative flex h-10 items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3.5 text-sm font-semibold text-white transition-colors hover:border-white/25 hover:bg-white/10"
           >
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Quote</span>
@@ -92,7 +92,7 @@ export default function SiteHeader() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-white text-navy-900 md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-white md:hidden"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -107,7 +107,7 @@ export default function SiteHeader() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="overflow-hidden border-t border-line bg-white md:hidden"
+            className="overflow-hidden border-t border-white/10 bg-black md:hidden"
             aria-label="Mobile"
           >
             <div className="space-y-1 px-4 py-3">
@@ -119,8 +119,8 @@ export default function SiteHeader() {
                   className={cn(
                     "block rounded-lg px-3 py-2.5 text-sm font-medium",
                     isActive(item.href)
-                      ? "bg-navy-900/5 text-navy-900"
-                      : "text-muted hover:bg-slate-100"
+                      ? "bg-white/10 text-white"
+                      : "text-white/60 hover:bg-white/5"
                   )}
                 >
                   {item.label}

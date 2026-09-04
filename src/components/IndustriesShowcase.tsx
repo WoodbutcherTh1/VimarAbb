@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { Industry } from "@/lib/data";
 
 interface IndustriesShowcaseProps {
@@ -16,7 +16,7 @@ export default function IndustriesShowcase({
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!trackRef.current) return;
+    if (!trackRef.current || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
       const track = trackRef.current!;

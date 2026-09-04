@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Euro } from "lucide-react";
-import { gsap } from "@/lib/gsap";
+import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { PRICE_COLOR } from "@/lib/showroomConfig";
 
 /** Neutral while the figure is still settling. */
@@ -44,6 +44,13 @@ export default function PriceCounter({
     const wrap = wrapRef.current;
     const num = numRef.current;
     if (!wrap || !num) return;
+
+    // Reduced motion: land on the final figure instantly, no count-up.
+    if (prefersReducedMotion()) {
+      num.textContent = value.toFixed(2);
+      gsap.set(wrap, { color: PRICE_COLOR });
+      return;
+    }
 
     const counter = { v: 0 };
     num.textContent = "0.00";

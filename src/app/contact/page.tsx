@@ -66,13 +66,13 @@ export default function ContactPage() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
       <div className="max-w-2xl">
-        <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/60">
           Contact
         </p>
-        <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
+        <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
           Quotes & project support
         </h1>
-        <p className="mt-4 leading-relaxed text-muted">
+        <p className="mt-4 leading-relaxed text-white/60">
           Send us your product list and we&apos;ll come back with a clear,
           itemized quote. You can also build your list in the catalog and send
           it straight from the quote panel.
@@ -119,7 +119,7 @@ export default function ContactPage() {
             );
           })
         ) : (
-          <p className="text-sm text-muted">
+          <p className="text-sm text-white/60">
             Contact details are being set up — meanwhile, browse the catalog and
             use the quote panel.
           </p>

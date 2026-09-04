@@ -69,17 +69,17 @@ function CornerTicks({ color = "border-navy-900" }: { color?: string }) {
 /** Neutral hero — no brand imagery mixed here, just KAHANA + search + the two doors. */
 function Hero() {
   return (
-    <section className="border-b border-line bg-white">
+    <section className="border-b border-white/10 bg-black">
       <div className="mx-auto flex max-w-7xl flex-col items-center px-4 pb-16 pt-14 text-center sm:px-6 sm:pb-20 sm:pt-20">
-        <Kicker>KAHANA Electrical — authorized showroom</Kicker>
+        <Kicker tone="light">KAHANA Electrical — authorized showroom</Kicker>
 
-        <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.04] tracking-tight text-navy-950 sm:text-6xl">
+        <h1 className="mt-6 max-w-3xl text-4xl font-extrabold leading-[1.04] tracking-tight text-white sm:text-6xl">
           Premium electrical products,
           <br />
-          from <span className="font-serif font-medium italic text-amber-700">two great houses.</span>
+          from <span className="font-serif font-medium italic text-amber-400">two great houses.</span>
         </h1>
 
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg">
           Vimar&apos;s Italian design and ABB&apos;s engineered precision —
           each with its own catalog, its own collections, and its own experts.
           No mixing.
@@ -100,7 +100,7 @@ function Hero() {
           </Link>
           <Link
             href="/contact"
-            className="flex items-center gap-2 border-b border-navy-950/20 pb-0.5 text-sm font-semibold text-navy-950 transition-colors hover:border-amber-600 hover:text-amber-700"
+            className="flex items-center gap-2 border-b border-white/30 pb-0.5 text-sm font-semibold text-white transition-colors hover:border-amber-400 hover:text-amber-400"
           >
             Request a quote <ArrowUpRight className="h-4 w-4" />
           </Link>
@@ -110,7 +110,7 @@ function Hero() {
           <CatalogSearch />
         </div>
 
-        <p className="mt-9 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+        <p className="mt-9 border-t border-white/10 pt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-white/40">
           {TOTAL_PRODUCTS} products · {TOTAL_CATEGORIES} collections · quotes within 24h
         </p>
       </div>
@@ -127,7 +127,7 @@ function BrandSplit() {
     <section className="border-b border-line">
       <div className="grid lg:grid-cols-2">
         {/* ============ VIMAR ============ */}
-        <div className="border-b border-line bg-[#faf6ec] lg:border-b-0 lg:border-r">
+        <div className="border-b border-line bg-[#fdfcfc] lg:border-b-0 lg:border-r">
           <div className="mx-auto max-w-xl px-4 py-14 sm:px-8 sm:py-20 lg:px-12">
             <Kicker>House 01 — Italian design</Kicker>
             <h2 className="mt-4 text-5xl font-extrabold tracking-tight text-navy-950 sm:text-6xl">

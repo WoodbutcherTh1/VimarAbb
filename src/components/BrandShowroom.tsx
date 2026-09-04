@@ -12,6 +12,7 @@ import {
   Product,
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/lib/useDialog";
 import CategorySidebar from "@/components/CategorySidebar";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
@@ -33,6 +34,13 @@ export default function BrandShowroom({ brandId }: BrandShowroomProps) {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  // Mobile category drawer behaves like a dialog: Escape closes it, focus is
+  // trapped while open and restored on close.
+  const drawerRef = useDialog<HTMLDivElement>({
+    isOpen: mobileNavOpen,
+    onClose: () => setMobileNavOpen(false),
+  });
 
   const currentCategory = useMemo(() => {
     if (activePath.length === 0) return null;
@@ -116,7 +124,7 @@ export default function BrandShowroom({ brandId }: BrandShowroomProps) {
       </section>
 
       {/* Toolbar */}
-      <div className="sticky top-16 z-30 border-b border-line bg-background/90 backdrop-blur-md">
+      <div className="sticky top-16 z-30 border-b border-white/10 bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6">
           {/* Mobile categories toggle */}
           <button
@@ -169,23 +177,25 @@ export default function BrandShowroom({ brandId }: BrandShowroomProps) {
 
       {/* Body */}
       <div className="mx-auto flex max-w-7xl gap-8 px-4 py-8 sm:px-6">
-        {/* Desktop sidebar */}
+        {/* Desktop sidebar — raised light surface on the dark chrome */}
         <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-36">
-            <CategorySidebar
-              categories={brand.categories}
-              activePath={activePath}
-              onNavigate={handleNavigate}
-              accentDark={brand.accentDark}
-            />
+            <div className="rounded-xl border border-line bg-white p-3 shadow-sm">
+              <CategorySidebar
+                categories={brand.categories}
+                activePath={activePath}
+                onNavigate={handleNavigate}
+                accentDark={brand.accentDark}
+              />
+            </div>
           </div>
         </aside>
 
         {/* Content */}
         <div className="min-w-0 flex-1">
           <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-xl font-bold tracking-tight text-navy-900">{heading}</h2>
-            <p className="text-sm text-muted">{headingNote}</p>
+            <h2 className="text-xl font-bold tracking-tight text-white">{heading}</h2>
+            <p className="text-sm text-white/60">{headingNote}</p>
           </div>
 
           {displayedProducts.length > 0 ? (
@@ -227,12 +237,14 @@ export default function BrandShowroom({ brandId }: BrandShowroomProps) {
               onClick={() => setMobileNavOpen(false)}
             />
             <motion.div
+              ref={drawerRef}
               className="fixed inset-y-0 left-0 z-[71] flex w-[300px] flex-col bg-white shadow-2xl lg:hidden"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 340, damping: 34 }}
               role="dialog"
+              aria-modal="true"
               aria-label="Categories"
             >
               <div className="flex items-center justify-between border-b border-line px-5 py-4">

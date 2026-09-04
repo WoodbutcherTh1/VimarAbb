@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/data";
 import { useQuote } from "@/lib/quote";
+import { useDialog } from "@/lib/useDialog";
+import { readableTextOn } from "@/lib/utils";
 import PriceCounter from "@/components/PriceCounter";
 import { X, Check, Package, Shield, Award, Zap } from "lucide-react";
 
@@ -26,6 +28,11 @@ export default function ProductModal({
   const [addedFor, setAddedFor] = useState<string | null>(null);
   const justAdded = !!product && addedFor === product.id;
 
+  // WCAG dialog behavior: focus moves in on open, Tab is trapped, Escape
+  // closes (only while focus is inside this dialog), focus is restored on
+  // close.
+  const dialogRef = useDialog<HTMLDivElement>({ isOpen: !!product, onClose });
+
   const handleAdd = () => {
     if (!product) return;
     add(product, brandId);
@@ -43,15 +50,6 @@ export default function ProductModal({
       document.body.style.overflow = "";
     };
   }, [product]);
-
-  useEffect(() => {
-    if (!product) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [product, onClose]);
 
   if (!product) return null;
 
@@ -75,6 +73,7 @@ export default function ProductModal({
 
           {/* Modal Content */}
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={product.name}
@@ -154,8 +153,11 @@ export default function ProductModal({
                   <button
                     onClick={handleAdd}
                     disabled={!product.inStock}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-                    style={{ backgroundColor: accentDark }}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+                    style={{
+                      backgroundColor: accentDark,
+                      color: readableTextOn(accentDark),
+                    }}
                   >
                     {justAdded ? (
                       <>
