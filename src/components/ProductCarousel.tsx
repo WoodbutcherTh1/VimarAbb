@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Sparkles, ArrowUpRight } from "lucide-react";
 import { Product } from "@/lib/data";
@@ -10,6 +10,8 @@ import PriceCounter from "@/components/PriceCounter";
 interface ProductCarouselProps {
   products: Product[];
   accentColor: string;
+  /** Text color that holds AA contrast on the accent button. */
+  accentTextColor: string;
   collectionName: string;
   collectionTagline?: string;
   onProductClick: (product: Product) => void;
@@ -23,17 +25,22 @@ const MAX_VISIBLE_OFFSET = 4;
 export default function ProductCarousel({
   products,
   accentColor,
+  accentTextColor,
   collectionName,
   collectionTagline,
   onProductClick,
 }: ProductCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{ startX: number; dragging: boolean } | null>(null);
 
-  useEffect(() => {
+  // Reset the active card when the collection changes — derived-state reset
+  // during render, per React's guidance (no setState inside an effect).
+  const [prevProducts, setPrevProducts] = useState(products);
+  if (products !== prevProducts) {
+    setPrevProducts(products);
     setActiveIndex(0);
-  }, [products]);
+  }
 
   const clampIndex = useCallback(
     (i: number) => Math.max(0, Math.min(products.length - 1, i)),
@@ -44,15 +51,23 @@ export default function ProductCarousel({
   const next = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
   const prev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
 
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "Enter" && products[activeIndex]) onProductClick(products[activeIndex]);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [next, prev, activeIndex, products, onProductClick]);
+  // Arrow keys navigate only while focus is inside the carousel — the global
+  // keydown listener the stage used before hijacked page scrolling and the
+  // header search box everywhere else on the page.
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.key === "ArrowRight") next();
+    else prev();
+    // Only the active card is tabbable, so move focus to the new active card
+    // after navigating with the keyboard.
+    requestAnimationFrame(() => {
+      rootRef.current
+        ?.querySelector<HTMLElement>('[data-carousel-card="active"]')
+        ?.focus();
+    });
+  };
 
   const handlePointerDown = (e: React.PointerEvent) => {
     dragState.current = { startX: e.clientX, dragging: true };
@@ -61,7 +76,8 @@ export default function ProductCarousel({
     if (!dragState.current?.dragging) return;
     const delta = e.clientX - dragState.current.startX;
     if (Math.abs(delta) > 40) {
-      delta > 0 ? prev() : next();
+      if (delta > 0) prev();
+      else next();
     }
     dragState.current = null;
   };
@@ -70,18 +86,18 @@ export default function ProductCarousel({
   if (!activeProduct) return null;
 
   return (
-    <div className="relative">
+    <div ref={rootRef} className="relative" onKeyDown={handleKeyDown}>
       {/* Header */}
       <div className="text-center pt-8 pb-6 px-6">
-        <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.3em] text-white/30 mb-2">
+        <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.22em] text-inverse mb-2">
           <Sparkles className="w-3 h-3" style={{ color: accentColor }} />
           Collection
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-tertiary">
           {collectionName}
         </h2>
         {collectionTagline && (
-          <p className="text-white/40 text-sm mt-2">{collectionTagline}</p>
+          <p className="text-inverse text-sm mt-2">{collectionTagline}</p>
         )}
       </div>
 
@@ -101,7 +117,6 @@ export default function ProductCarousel({
         />
 
         <div
-          ref={trackRef}
           className="absolute inset-0 flex items-center justify-center"
           style={{ transformStyle: "preserve-3d" }}
         >
@@ -121,7 +136,12 @@ export default function ProductCarousel({
               <button
                 key={product.id}
                 onClick={() => (isActive ? onProductClick(product) : goTo(i))}
-                className="absolute top-1/2 left-1/2 cursor-pointer"
+                // Only the active card participates in tab order; the rest are
+                // decorative previews for pointer users.
+                tabIndex={isActive ? 0 : -1}
+                aria-hidden={isActive ? undefined : true}
+                data-carousel-card={isActive ? "active" : undefined}
+                className="group absolute top-1/2 left-1/2 cursor-pointer"
                 style={{
                   width: CARD_W,
                   height: CARD_H,
@@ -137,18 +157,18 @@ export default function ProductCarousel({
                 {/* Label above card */}
                 <div
                   className={cn(
-                    "absolute -top-7 left-0 right-0 text-center text-[11px] uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis px-1 transition-opacity",
-                    isActive ? "text-white/80 opacity-100" : "text-white/30 opacity-70"
+                    "absolute -top-7 left-0 right-0 text-center text-xs uppercase tracking-wider whitespace-nowrap overflow-hidden text-ellipsis px-1 transition-opacity",
+                    isActive ? "text-tertiary opacity-100" : "text-inverse opacity-70"
                   )}
                 >
                   {product.name}
                 </div>
 
-                {/* Card */}
+                {/* Card — raised light surface */}
                 <div
                   className={cn(
-                    "relative w-full h-full rounded-xl overflow-hidden border bg-white/[0.03]",
-                    isActive ? "border-white/20 shadow-2xl" : "border-white/5"
+                    "relative w-full h-full rounded-md overflow-hidden border bg-raised shadow-1 transition-[filter,border-color] duration-normal",
+                    isActive ? "border-default group-hover:border-tertiary/50 group-hover:brightness-105" : "border-default/60"
                   )}
                   style={isActive ? { boxShadow: `0 20px 60px -12px ${accentColor}55` } : undefined}
                 >
@@ -156,9 +176,9 @@ export default function ProductCarousel({
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${product.image})` }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   {product.featured && (
-                    <div className="absolute top-2 left-2 p-1 rounded-full bg-white/10 backdrop-blur-md">
+                    <div className="absolute top-2 left-2 p-1.5 rounded-sm bg-raised border border-default shadow-1">
                       <Sparkles className="w-3 h-3" style={{ color: accentColor }} />
                     </div>
                   )}
@@ -166,7 +186,7 @@ export default function ProductCarousel({
 
                 {/* Reflection */}
                 <div
-                  className="absolute left-0 right-0 top-full w-full h-full rounded-xl overflow-hidden pointer-events-none"
+                  className="absolute left-0 right-0 top-full w-full h-full rounded-md overflow-hidden pointer-events-none"
                   style={{
                     transform: "scaleY(-1)",
                     maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 55%)",
@@ -187,21 +207,23 @@ export default function ProductCarousel({
         <button
           onClick={prev}
           disabled={activeIndex === 0}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-[200] p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-[200] p-2.5 rounded-sm bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+          aria-label="Previous product"
         >
-          <ChevronLeft className="w-5 h-5 text-white/70" />
+          <ChevronLeft className="w-5 h-5 text-inverse" />
         </button>
         <button
           onClick={next}
           disabled={activeIndex === products.length - 1}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-[200] p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-[200] p-2.5 rounded-sm bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+          aria-label="Next product"
         >
-          <ChevronRight className="w-5 h-5 text-white/70" />
+          <ChevronRight className="w-5 h-5 text-inverse" />
         </button>
       </div>
 
       {/* Counter + name + dots */}
-      <div className="text-center pb-4">
+      <div className="text-center pb-4" aria-live="polite">
         <p className="text-xs font-mono tracking-widest" style={{ color: accentColor }}>
           {String(activeIndex + 1).padStart(2, "0")} / {String(products.length).padStart(2, "0")}
         </p>
@@ -212,7 +234,7 @@ export default function ProductCarousel({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="text-xl font-bold uppercase tracking-wide text-white mt-1"
+            className="text-xl font-bold uppercase tracking-wide text-tertiary mt-1"
           >
             {activeProduct.name}
           </motion.h3>
@@ -223,12 +245,20 @@ export default function ProductCarousel({
             <button
               key={p.id}
               onClick={() => goTo(i)}
-              className="h-1.5 rounded-full transition-all duration-300"
-              style={{
-                width: i === activeIndex ? 20 : 6,
-                backgroundColor: i === activeIndex ? accentColor : "rgba(255,255,255,0.15)",
-              }}
-            />
+              aria-label={`Go to ${p.name}`}
+              aria-current={i === activeIndex ? "true" : undefined}
+              // 24px hit target with a 5px visual dot — meets touch minimums.
+              className="flex items-center justify-center w-6 h-6 rounded-full hover:bg-white/10 transition-colors duration-instant"
+            >
+              <span
+                className="rounded-full transition-all duration-normal"
+                style={{
+                  width: i === activeIndex ? 16 : 5,
+                  height: 5,
+                  backgroundColor: i === activeIndex ? accentColor : "rgba(255,255,255,0.2)",
+                }}
+              />
+            </button>
           ))}
         </div>
       </div>
@@ -245,7 +275,7 @@ export default function ProductCarousel({
         >
           <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
             {activeProduct.featured && (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/10 border border-white/10 text-white/80">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/10 border border-white/10 text-tertiary/80">
                 <Sparkles className="w-3 h-3" style={{ color: accentColor }} />
                 Featured
               </span>
@@ -263,14 +293,14 @@ export default function ProductCarousel({
             {activeProduct.tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-white/40 border border-white/5"
+                className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 text-inverse border border-white/5"
               >
                 {tag}
               </span>
             ))}
           </div>
 
-          <p className="text-center text-white/40 text-sm leading-relaxed mb-6">
+          <p className="text-center text-inverse text-sm leading-relaxed mb-6">
             {activeProduct.description}
           </p>
 
@@ -283,8 +313,8 @@ export default function ProductCarousel({
             />
             <motion.button
               onClick={() => onProductClick(activeProduct)}
-              className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-semibold uppercase tracking-wider text-white"
-              style={{ backgroundColor: accentColor }}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-sm text-sm font-semibold uppercase tracking-wider"
+              style={{ backgroundColor: accentColor, color: accentTextColor }}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >

@@ -2,11 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import { Euro } from "lucide-react";
-import { gsap } from "@/lib/gsap";
-import { PRICE_COLOR } from "@/lib/showroomConfig";
+import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { PRICE_COLOR, PRICE_COLOR_RAISED } from "@/lib/showroomConfig";
 
 /** Neutral while the figure is still settling. */
 const COUNTING_COLOR = "rgba(255,255,255,0.55)";
+const COUNTING_COLOR_RAISED = "#777169";
 
 interface PriceCounterProps {
   value: number;
@@ -19,6 +20,9 @@ interface PriceCounterProps {
   currencyClassName?: string;
   duration?: number;
   delay?: number;
+  /** Set when the counter sits on a raised (light) surface — the settled
+      green has to darken to hold WCAG AA contrast on #fdfcfc. */
+  onRaised?: boolean;
 }
 
 /**
@@ -39,6 +43,7 @@ export default function PriceCounter({
   currencyClassName = "text-xs uppercase opacity-60",
   duration = 0.9,
   delay = 0.15,
+  onRaised = false,
 }: PriceCounterProps) {
   const wrapRef = useRef<HTMLSpanElement>(null);
   const numRef = useRef<HTMLSpanElement>(null);
@@ -50,12 +55,13 @@ export default function PriceCounter({
 
     const counter = { v: 0 };
     num.textContent = "0.00";
-    gsap.set(wrap, { color: COUNTING_COLOR });
+    gsap.set(wrap, { color: onRaised ? COUNTING_COLOR_RAISED : COUNTING_COLOR });
 
+    // Reduced motion: skip the count-up, land on the final figure at once.
     const tween = gsap.to(counter, {
       v: value,
-      duration,
-      delay,
+      duration: prefersReducedMotion() ? 0 : duration,
+      delay: prefersReducedMotion() ? 0 : delay,
       ease: "power2.out",
       onUpdate: () => {
         num.textContent = counter.v.toFixed(2);
@@ -63,7 +69,7 @@ export default function PriceCounter({
       onComplete: () => {
         // Land exactly on the price, then flip to green.
         num.textContent = value.toFixed(2);
-        gsap.to(wrap, { color: PRICE_COLOR, duration: 0.35, ease: "power2.out" });
+        gsap.to(wrap, { color: onRaised ? PRICE_COLOR_RAISED : PRICE_COLOR, duration: 0.35, ease: "power2.out" });
       },
     });
 
@@ -71,7 +77,7 @@ export default function PriceCounter({
       tween.kill();
       gsap.killTweensOf(wrap);
     };
-  }, [value, duration, delay, resetKey]);
+  }, [value, duration, delay, resetKey, onRaised]);
 
   return (
     <span ref={wrapRef} className={className}>

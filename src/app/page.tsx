@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "@/lib/gsap";
+import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { brands, getCategoryByPath, getAllProducts, abbIndustries, Product } from "@/lib/data";
 import FluidBackground from "@/components/FluidBackground";
 import BrandBackgroundVideo from "@/components/BrandBackgroundVideo";
@@ -17,7 +17,7 @@ import IndustriesShowcase from "@/components/IndustriesShowcase";
 import BrandLanding from "@/components/BrandLanding";
 import QuotePanel from "@/components/QuotePanel";
 import { QuoteProvider, useQuote } from "@/lib/quote";
-import { Search, Menu, Grid3X3, FileText } from "lucide-react";
+import { Search, Menu, Grid3X3, FileText, X, ChevronLeft } from "lucide-react";
 
 export default function Home() {
   return (
@@ -27,21 +27,22 @@ export default function Home() {
   );
 }
 
-function QuoteButton({ accentColor }: { accentColor: string }) {
+function QuoteButton({ accentColor, accentText }: { accentColor: string; accentText: string }) {
   const { count, setOpen } = useQuote();
   return (
     <motion.button
       onClick={() => setOpen(true)}
       aria-label={`Open quote (${count} item${count !== 1 ? "s" : ""})`}
-      className="relative p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+      aria-haspopup="dialog"
+      className="relative p-2.5 rounded-sm bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
       whileTap={{ scale: 0.95 }}
       whileHover={{ scale: 1.05 }}
     >
-      <FileText className="w-5 h-5 text-white/60" />
+      <FileText className="w-5 h-5 text-inverse" />
       {count > 0 && (
         <span
-          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-black"
-          style={{ backgroundColor: accentColor }}
+          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center"
+          style={{ backgroundColor: accentColor, color: accentText }}
         >
           {count}
         </span>
@@ -56,10 +57,14 @@ function Showroom() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [headerCompact, setHeaderCompact] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
+  // Skip the intro timeline entirely when the OS asks for reduced motion —
+  // the elements are already at their visible end state.
   useEffect(() => {
+    if (prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tl.fromTo(
@@ -90,6 +95,15 @@ function Showroom() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileNavOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileNavOpen]);
+
   const activeBrand = useMemo(
     () => brands.find((b) => b.id === activeBrandId) || brands[0],
     [activeBrandId]
@@ -119,11 +133,15 @@ function Showroom() {
     return getAllProducts(activeBrand).filter((p) => p.featured).slice(0, 6);
   }, [activeBrand, currentCategory, searchQuery]);
 
+  // White on the Vimar gold is 2.4:1 — dark text holds AA on the accent buttons.
+  const accentText = activeBrand.id === "vimar" ? "#1a1a2e" : "#ffffff";
+
   const handleBrandChange = (brandId: string) => {
     setActiveBrandId(brandId);
     setActivePath([]);
     setSelectedProduct(null);
     setSearchQuery("");
+    setMobileNavOpen(false);
   };
 
   const handleNavigate = (path: string[]) => {
@@ -155,7 +173,7 @@ function Showroom() {
       {/* Header */}
       <header
         ref={headerRef}
-        className={`relative z-20 flex items-center justify-between gap-3 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl transition-all duration-300 ${
+        className={`relative z-20 flex items-center justify-between gap-3 border-b border-white/5 bg-surface/80 backdrop-blur-xl transition-all duration-300 ${
           headerCompact ? "px-4 md:px-6 py-2.5" : "px-4 md:px-6 py-4"
         }`}
       >
@@ -164,10 +182,10 @@ function Showroom() {
             onClick={handleBackToLanding}
             aria-label="Back to showroom home"
             title="Back to showroom home"
-            className="flex items-center gap-3 min-w-0 rounded-xl hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 min-w-0 rounded-sm hover:opacity-80 transition-opacity"
           >
             <motion.div
-              className="hero-logo shrink-0 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg tracking-tighter"
+              className="hero-logo shrink-0 w-10 h-10 rounded-sm flex items-center justify-center font-bold text-lg tracking-tighter"
               style={{
                 backgroundColor: activeBrand.accentColor,
                 color: activeBrand.id === "vimar" ? "#1a1a2e" : "#fff",
@@ -184,7 +202,7 @@ function Showroom() {
                 {activeBrand.logoText}
               </h1>
               <motion.p
-                className="text-[10px] text-white/30 uppercase tracking-widest overflow-hidden whitespace-nowrap"
+                className="text-[10px] text-inverse uppercase tracking-widest overflow-hidden whitespace-nowrap"
                 animate={{ height: headerCompact ? 0 : "auto", opacity: headerCompact ? 0 : 1 }}
                 transition={{ duration: 0.25 }}
               >
@@ -200,50 +218,140 @@ function Showroom() {
           </div>
 
           <div className="hero-search hidden md:flex items-center relative group">
-            <Search className="absolute left-3 w-4 h-4 text-white/30 transition-colors group-focus-within:text-white/60" />
+            <Search className="absolute left-3 w-4 h-4 text-inverse transition-colors group-focus-within:text-tertiary pointer-events-none" />
             <input
               type="text"
               placeholder="Search products..."
+              aria-label="Search products"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2.5 w-64 rounded-xl bg-white/5 border border-white/5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/15 transition-all duration-300 focus:w-72"
+              className="pl-10 pr-10 py-2.5 w-64 rounded-sm bg-white/5 border border-white/10 text-sm text-tertiary placeholder:text-inverse/60 transition-all duration-normal focus:w-72"
               style={{
                 boxShadow: searchQuery ? `0 0 0 3px ${activeBrand.accentColor}22` : undefined,
               }}
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                aria-label="Clear search"
+                className="absolute right-2 p-1 rounded-sm text-inverse hover:text-tertiary hover:bg-white/10 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
-          <QuoteButton accentColor={activeBrand.accentColor} />
+          <QuoteButton accentColor={activeBrand.accentColor} accentText={accentText} />
 
           <motion.button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors lg:hidden"
+            onClick={() => setMobileNavOpen(!mobileNavOpen)}
+            aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={mobileNavOpen}
+            aria-haspopup="dialog"
+            className="p-2.5 rounded-sm bg-white/5 border border-white/10 hover:bg-white/10 transition-colors lg:hidden"
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Menu className="w-5 h-5 text-white/60" />
+            {mobileNavOpen ? <X className="w-5 h-5 text-inverse" /> : <Menu className="w-5 h-5 text-inverse" />}
           </motion.button>
         </div>
       </header>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-1 overflow-hidden">
+        {/* Desktop sidebar column (always visible; collapsible) */}
+        <div className="hidden lg:flex shrink-0 h-full relative">
+          <div
+            className={`overflow-hidden transition-all duration-normal ${
+              sidebarOpen ? "w-72" : "w-0"
+            }`}
+          >
+            <Sidebar
+              categories={activeBrand.categories}
+              activePath={activePath}
+              onNavigate={handleNavigate}
+              accentColor={activeBrand.accentColor}
+            />
+          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label={sidebarOpen ? "Collapse categories" : "Expand categories"}
+            aria-expanded={sidebarOpen}
+            className="absolute top-4 -right-3 z-30 w-6 h-6 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors"
+          >
+            <ChevronLeft
+              className={`w-3.5 h-3.5 text-inverse transition-transform duration-normal ${
+                sidebarOpen ? "" : "rotate-180"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Mobile navigation drawer */}
         <AnimatePresence>
-          {sidebarOpen && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 288, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="hidden lg:block overflow-hidden"
-            >
-              <Sidebar
-                categories={activeBrand.categories}
-                activePath={activePath}
-                onNavigate={handleNavigate}
-                accentColor={activeBrand.accentColor}
+          {mobileNavOpen && (
+            <div className="lg:hidden fixed inset-0 z-40">
+              <motion.div
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setMobileNavOpen(false)}
               />
-            </motion.div>
+              <motion.aside
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-surface border-r border-white/5 flex flex-col"
+              >
+                <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 shrink-0">
+                  <span className="text-xs font-bold uppercase tracking-widest text-inverse">
+                    Categories
+                  </span>
+                  <button
+                    onClick={() => setMobileNavOpen(false)}
+                    aria-label="Close navigation"
+                    className="p-2 rounded-sm bg-white/5 hover:bg-white/10 transition-colors"
+                  >
+                    <X className="w-4 h-4 text-inverse" />
+                  </button>
+                </div>
+
+                {/* The header search is hidden below md — give mobile users a
+                    search field in the drawer instead. */}
+                <div className="relative p-3 shrink-0">
+                  <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-inverse pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    aria-label="Search products"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-12 py-2.5 rounded-sm bg-white/5 border border-white/10 text-sm text-tertiary placeholder:text-inverse/60"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      aria-label="Clear search"
+                      className="absolute right-6 top-1/2 -translate-y-1/2 p-1 rounded-sm text-inverse hover:text-tertiary hover:bg-white/10 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                <Sidebar
+                  categories={activeBrand.categories}
+                  activePath={activePath}
+                  onNavigate={(path) => {
+                    handleNavigate(path);
+                    setMobileNavOpen(false);
+                  }}
+                  accentColor={activeBrand.accentColor}
+                />
+              </motion.aside>
+            </div>
           )}
         </AnimatePresence>
 
@@ -269,6 +377,7 @@ function Showroom() {
               <ProductCarousel
                 products={displayedProducts}
                 accentColor={activeBrand.accentColor}
+                accentTextColor={accentText}
                 collectionName={
                   currentCategory ? currentCategory.name : searchQuery ? `Search: "${searchQuery}"` : "Featured"
                 }
@@ -282,7 +391,7 @@ function Showroom() {
                 onProductClick={setSelectedProduct}
               />
             ) : (
-              <div className="flex flex-col items-center justify-center h-96 text-white/20">
+              <div className="flex flex-col items-center justify-center h-96 text-inverse">
                 <Grid3X3 className="w-12 h-12 mb-4 opacity-30" />
                 <p className="text-lg font-medium">No products found</p>
                 <p className="text-sm">Try adjusting your search or category selection</p>
@@ -304,7 +413,7 @@ function Showroom() {
         onClose={() => setSelectedProduct(null)}
       />
 
-      <QuotePanel accentColor={activeBrand.accentColor} />
+      <QuotePanel accentColor={activeBrand.accentColor} brandId={activeBrand.id} />
     </div>
       )}
     </>

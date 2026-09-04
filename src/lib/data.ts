@@ -943,7 +943,9 @@ const rawBrands: Brand[] = [
     name: "ABB",
     logoText: "ABB",
     tagline: "Engineering the Future",
-    accentColor: "#ff0000",
+    // #d70000 rather than #ff0000: white text on the raw red is 4.0:1, which
+    // fails WCAG AA for normal text on the accent buttons.
+    accentColor: "#d70000",
     categories: [abbBuschJaeger, abbCircuitProtection, abbAutomation, abbEnclosures, abbLowVoltage],
   },
 ];

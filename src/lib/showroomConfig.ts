@@ -14,3 +14,20 @@ export const QUOTE_STORAGE_KEY = "vimarabb.quote.v1";
 
 /** Prices read in green everywhere, independent of the active brand accent. */
 export const PRICE_COLOR = "#39ff8f";
+
+/**
+ * Accent/price variants that hold WCAG AA contrast on the raised (light)
+ * surfaces. The raw brand accents fail on #fdfcfc — gold especially — so
+ * these darker variants carry text, icons, and focus on light panels while
+ * the raw accents stay on the dark chrome.
+ */
+export const PRICE_COLOR_RAISED = "#1a7f37";
+
+export const ACCENT_ON_RAISED: Record<string, string> = {
+  vimar: "#8a6d0f",
+  abb: "#b30000",
+};
+
+export function accentOnRaised(brandId: string): string {
+  return ACCENT_ON_RAISED[brandId] ?? PRICE_COLOR_RAISED;
+}

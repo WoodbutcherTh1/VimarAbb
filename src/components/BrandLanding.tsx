@@ -6,66 +6,14 @@ import { Zap } from "lucide-react";
 import { brands } from "@/lib/data";
 import { withBasePath } from "@/lib/basePath";
 import FluidBackground from "@/components/FluidBackground";
-import AmbientFX from "@/components/AmbientFX";
-import BrandBackgroundVideo from "@/components/BrandBackgroundVideo";
 import BrandFloatCard from "@/components/BrandFloatCard";
-import CustomCursor from "@/components/CustomCursor";
 
 interface BrandLandingProps {
   onSelect: (brandId: string) => void;
 }
 
 const ACCENT = "#39ff8f";
-const EXIT_DURATION_MS = 900;
-const WORDMARK = "SHOWROOM";
-
-function WordReveal({ lines }: { lines: string[] }) {
-  let wordIndex = 0;
-  return (
-    <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-white leading-[1.15]">
-      {lines.map((line, li) => (
-        <span key={li} className="block">
-          {line.split(" ").map((word, wi) => {
-            const delay = wordIndex * 0.1;
-            wordIndex++;
-            return (
-              <span key={wi} className="word-wrapper mr-[0.28em]">
-                <span className="word-inner" style={{ animationDelay: `${delay}s` }}>
-                  {word}
-                </span>
-              </span>
-            );
-          })}
-        </span>
-      ))}
-    </h1>
-  );
-}
-
-function LetterReveal({ text }: { text: string }) {
-  return (
-    <h2
-      className="footer-logo-text text-center font-bold select-none"
-      style={{
-        fontSize: "min(15vw, 220px)",
-        letterSpacing: "-0.03em",
-        lineHeight: 0.8,
-        color: "#ffffff",
-        opacity: 0.95,
-        whiteSpace: "nowrap",
-        width: "100%",
-      }}
-    >
-      {[...text].map((char, i) => (
-        <span key={i} className="letter-wrapper">
-          <span className="letter-inner" style={{ animationDelay: `${i * 0.09}s` }}>
-            {char}
-          </span>
-        </span>
-      ))}
-    </h2>
-  );
-}
+const EXIT_DURATION_MS = 700;
 
 export default function BrandLanding({ onSelect }: BrandLandingProps) {
   const [exitingBrand, setExitingBrand] = useState<string | null>(null);
@@ -80,34 +28,19 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 overflow-hidden bg-[#050507]"
+      className="fixed inset-0 z-50 overflow-hidden bg-surface"
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.3 }}
     >
-      <CustomCursor label="Enter ⇢" accentColor={ACCENT} />
-      {/* Backdrop stack, back to front: video, particles, glow. The footage
-          carries the scene now, so the drawn mountain range is gone. */}
-      <BrandBackgroundVideo brandId="landing" zIndex={-3} opacityClass="opacity-60" />
       <FluidBackground brandId="landing" />
-      <AmbientFX accentColor={ACCENT} />
-
-      {/* top + bottom vignette, to seat the content over the footage */}
-      <div
-        className="fixed inset-x-0 top-0 h-[45vh] pointer-events-none z-[2]"
-        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.55) 45%, transparent)" }}
-      />
-      <div
-        className="fixed inset-x-0 bottom-0 h-[35vh] pointer-events-none z-[2]"
-        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.9), transparent)" }}
-      />
 
       {/* Showroom mark, top-left */}
       <div className="landing-logo fixed top-5 left-5 z-20 flex items-center gap-2.5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={withBasePath("/logo.svg")} alt="" width={40} height={40} className="w-9 h-9 md:w-10 md:h-10" />
         <div className="leading-none">
-          <p className="font-bold tracking-tight text-white text-base md:text-lg">KAHANA</p>
-          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.22em] text-white/40 mt-0.5">
+          <p className="font-bold tracking-tight text-tertiary text-base md:text-lg">KAHANA</p>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-inverse mt-0.5">
             Electrical
           </p>
         </div>
@@ -118,26 +51,35 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
         style={{ opacity: exitingBrand ? 0 : 1, transitionDelay: exitingBrand ? "200ms" : "0ms" }}
       >
         {/* Hero heading */}
-        <main className="flex flex-col items-center text-center pt-[14vh] md:pt-[12vh] px-6 w-full max-w-3xl mx-auto">
-          <div className="flex items-center gap-2 mb-3 md:mb-4 text-white/40 text-xs uppercase tracking-[0.3em]">
+        <main className="flex flex-col items-center text-center pt-[14vh] md:pt-[12vh] px-6 w-full max-w-2xl mx-auto">
+          <div className="flex items-center gap-2 mb-4 text-inverse text-xs uppercase tracking-[0.22em]">
             <Zap className="w-3.5 h-3.5" style={{ color: ACCENT }} />
             Elite Electrical Showroom
           </div>
-          <WordReveal lines={["Two Brands.", "One Elite Showroom."]} />
-          <p className="text-white/40 mt-3 md:mt-5 text-sm md:text-base max-w-md">
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="text-3xl md:text-4xl font-bold tracking-tight text-tertiary leading-tight"
+          >
+            Two Brands. One Elite Showroom.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
+            className="text-inverse mt-3 max-w-md text-sm md:text-base"
+          >
             Pick a universe — Vimar&apos;s Italian design, or ABB&apos;s engineered precision.
-          </p>
+          </motion.p>
         </main>
 
-        {/* Floating brand cards, above the mountain */}
-        <div className="relative flex-1 w-full">
+        {/* Floating brand cards */}
+        <div className="flex flex-1 w-full items-start justify-center gap-5 md:gap-8 px-6 pt-[8vh]">
           {brands.map((brand) => (
             <BrandFloatCard
               key={brand.id}
               brand={brand}
-              tiltDeg={brand.id === "vimar" ? -7 : 7}
-              floatDuration={brand.id === "vimar" ? 7 : 8.5}
-              floatDelay={brand.id === "vimar" ? "0s" : "-2.5s"}
               isExiting={exitingBrand === brand.id}
               isOtherExiting={!!exitingBrand && exitingBrand !== brand.id}
               exitDurationMs={EXIT_DURATION_MS}
@@ -145,14 +87,6 @@ export default function BrandLanding({ onSelect }: BrandLandingProps) {
             />
           ))}
         </div>
-      </div>
-
-      {/* Giant wordmark, pinned bottom, over the mountain */}
-      <div
-        className="fixed inset-x-0 bottom-[-1vh] flex justify-center pointer-events-none z-[3] transition-opacity duration-300"
-        style={{ opacity: exitingBrand ? 0 : 1 }}
-      >
-        <LetterReveal text={WORDMARK} />
       </div>
     </motion.div>
   );

@@ -30,7 +30,7 @@ export default function Breadcrumb({ brandName, path, categories, onNavigate, on
           the brand crumb after it only resets the category path. */}
       <motion.button
         onClick={onHome}
-        className="flex items-center gap-1.5 shrink-0 text-white/40 hover:text-white/70 transition-colors"
+        className="flex items-center gap-1.5 shrink-0 text-inverse hover:text-tertiary/70 transition-colors"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -39,13 +39,13 @@ export default function Breadcrumb({ brandName, path, categories, onNavigate, on
       </motion.button>
       {pathNames.map((item, index) => (
         <div key={index} className="flex items-center gap-2 shrink-0">
-          <ChevronRight className="w-3.5 h-3.5 text-white/20" />
+          <ChevronRight className="w-3.5 h-3.5 text-inverse/40" />
           <motion.button
             onClick={() => onNavigate(item.targetPath)}
             className={`flex items-center gap-1.5 whitespace-nowrap transition-colors ${
               index === pathNames.length - 1
-                ? "text-white font-medium"
-                : "text-white/40 hover:text-white/70"
+                ? "text-tertiary font-medium"
+                : "text-inverse hover:text-tertiary/70"
             }`}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

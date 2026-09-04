@@ -56,10 +56,10 @@ function CategoryNode({
       <motion.button
         onClick={handleClick}
         className={cn(
-          "relative w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-left text-sm transition-colors group overflow-hidden",
+          "relative w-full flex items-center gap-2 px-3 py-2.5 rounded-sm text-left text-sm transition-colors group overflow-hidden",
           isActive
-            ? "text-white font-medium"
-            : "text-white/50 hover:text-white/80 hover:bg-white/5"
+            ? "text-tertiary font-medium"
+            : "text-inverse hover:text-tertiary/80 hover:bg-white/5"
         )}
         style={{ paddingLeft: `${12 + depth * 16}px` }}
         whileHover={{ x: 2 }}
@@ -68,7 +68,7 @@ function CategoryNode({
         {isActive && (
           <motion.div
             layoutId="sidebar-active-pill"
-            className="absolute inset-0 rounded-lg bg-white/10"
+            className="absolute inset-0 rounded-sm bg-white/10"
             style={{ boxShadow: `inset 2px 0 0 0 ${accentColor}` }}
             transition={{ type: "spring", stiffness: 400, damping: 35 }}
           />
@@ -132,8 +132,8 @@ function CategoryNode({
 
 export default function Sidebar({ categories, activePath, onNavigate, accentColor }: SidebarProps) {
   return (
-    <div className="w-72 h-full overflow-y-auto border-r border-white/5 bg-black/20 backdrop-blur-sm p-4">
-      <h3 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4 px-3">
+    <div className="w-72 h-full overflow-y-auto border-r border-white/5 bg-black/20 backdrop-blur-sm p-3">
+      <h3 className="text-xs font-bold uppercase tracking-widest text-inverse mb-3 px-3">
         Categories
       </h3>
       <div className="space-y-0.5">

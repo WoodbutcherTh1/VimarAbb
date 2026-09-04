@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/data";
 import { useQuote } from "@/lib/quote";
+import { useDialog } from "@/lib/useDialog";
 import PriceCounter from "@/components/PriceCounter";
-import { X, Check, Package, Shield, Zap, Award } from "lucide-react";
+import { accentOnRaised } from "@/lib/showroomConfig";
+import { X, Check, Package, Shield, Zap, Award, Loader2 } from "lucide-react";
 
 interface ProductModalProps {
   product: Product | null;
@@ -19,12 +21,22 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
   // Track which product the confirmation belongs to rather than a bare
   // boolean, so moving to another product clears it without an effect.
   const [addedFor, setAddedFor] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
   const justAdded = !!product && addedFor === product.id;
 
+  const dialogRef = useDialog({ isOpen: !!product, onClose });
+
+  // White on the Vimar gold is 2.4:1 — dark text holds AA on the accent buttons.
+  const accentText = brandId === "vimar" ? "#1a1a2e" : "#ffffff";
+  const accentRaised = accentOnRaised(brandId);
+
   const handleAdd = () => {
-    if (!product) return;
+    if (!product || adding) return;
+    setAdding(true);
     add(product, brandId);
     setAddedFor(product.id);
+    // Brief simulated submission so the button exposes a loading state.
+    window.setTimeout(() => setAdding(false), 600);
     window.setTimeout(() => setAddedFor((cur) => (cur === product.id ? null : cur)), 1800);
   };
 
@@ -59,10 +71,15 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
             exit={{ opacity: 0 }}
           />
 
-          {/* Modal Content */}
+          {/* Modal Content — raised light surface */}
           <motion.div
             layoutId={`product-${product.id}`}
-            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#12121a] border border-white/10 shadow-2xl"
+            ref={dialogRef as React.RefObject<HTMLDivElement>}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="product-modal-title"
+            className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-md bg-raised border border-default shadow-1"
+            data-surface="raised"
             initial={{ scale: 0.85, y: 40, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.85, y: 40, opacity: 0 }}
@@ -71,16 +88,16 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
             {/* Close Button */}
             <motion.button
               onClick={onClose}
-              className="absolute top-6 right-6 z-10 p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+              className="absolute top-6 right-6 z-10 p-3 rounded-sm bg-default/40 hover:bg-default/70 border border-default/70 transition-colors"
               whileHover={{ rotate: 90 }}
               whileTap={{ scale: 0.9 }}
             >
-              <X className="w-5 h-5 text-white/60" />
+              <X className="w-5 h-5 text-secondary" />
             </motion.button>
 
             <div className="grid md:grid-cols-2 gap-0">
-              {/* Left: Image with Explode Effect */}
-              <div className="relative aspect-square md:aspect-auto md:h-full overflow-hidden bg-gradient-to-br from-white/5 to-transparent p-8 flex items-center justify-center">
+              {/* Left: Image */}
+              <div className="relative aspect-square md:aspect-auto md:h-full overflow-hidden bg-default/40 p-8 flex items-center justify-center">
                 {/* Explode layers */}
                 <motion.div
                   className="absolute inset-0 bg-cover bg-center opacity-20 blur-3xl"
@@ -95,13 +112,13 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   className="absolute w-64 h-64 rounded-full blur-[80px]"
                   style={{ backgroundColor: accentColor }}
                   initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 0.15 }}
+                  animate={{ scale: 1, opacity: 0.12 }}
                   transition={{ delay: 0.1, duration: 0.6 }}
                 />
 
                 {/* Layer 2: Product image */}
                 <motion.div
-                  className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                  className="relative w-full max-w-md aspect-square rounded-md overflow-hidden shadow-1 border border-default/70"
                   initial={{ rotateY: -15, rotateX: 10, scale: 0.8, opacity: 0 }}
                   animate={{ rotateY: 0, rotateX: 0, scale: 1, opacity: 1 }}
                   transition={{ delay: 0.15, type: "spring", stiffness: 200, damping: 20 }}
@@ -114,7 +131,7 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
 
                   {/* Inner mechanism overlay - "exploded" view simulation */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10"
+                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-white/40"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.8 }}
@@ -131,7 +148,7 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   {product.tags.map((tag, i) => (
                     <motion.span
                       key={tag}
-                      className="px-3 py-1.5 rounded-full text-xs font-medium bg-black/40 backdrop-blur-md border border-white/10 text-white/80"
+                      className="px-3 py-1.5 rounded-sm text-xs font-medium bg-raised border border-default text-secondary shadow-1"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ delay: 0.5 + i * 0.08, type: "spring", stiffness: 300 }}
@@ -152,33 +169,36 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   transition={{ delay: 0.2 }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white/5 text-white/40 border border-white/5">
+                    <span className="px-2.5 py-0.5 rounded-xs text-[10px] font-bold uppercase tracking-wider bg-default/40 text-secondary border border-default/70">
                       {product.sku}
                     </span>
                     {product.featured && (
-                      <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-white/10" style={{ color: accentColor, backgroundColor: `${accentColor}15` }}>
+                      <span
+                        className="px-2.5 py-0.5 rounded-xs text-[10px] font-bold uppercase tracking-wider border"
+                        style={{ color: accentRaised, backgroundColor: `${accentRaised}15`, borderColor: `${accentRaised}40` }}
+                      >
                         Featured
                       </span>
                     )}
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+                  <h2 id="product-modal-title" className="text-3xl md:text-4xl font-bold tracking-tight text-secondary">
                     {product.name}
                   </h2>
-                  <p className="text-white/50 leading-relaxed text-base">
+                  <p className="text-secondary leading-relaxed text-base">
                     {product.description}
                   </p>
                 </motion.div>
 
                 {/* Price Block */}
                 <motion.div
-                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4"
+                  className="p-6 rounded-md bg-default/40 border border-default/70 space-y-4"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-xs text-white/30 uppercase tracking-wider mb-1">Unit Price</p>
+                      <p className="text-xs text-secondary uppercase tracking-wider mb-1">Unit Price</p>
                       <PriceCounter
                         value={product.price}
                         currency={product.currency}
@@ -188,13 +208,14 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                         numberClassName="text-4xl font-bold tracking-tight"
                         currencyClassName="text-sm font-medium opacity-60"
                         delay={0.35}
+                        onRaised
                       />
-                      <p className="text-xs text-white/20 mt-1">Excluding VAT • Shipping calculated at checkout</p>
+                      <p className="text-xs text-secondary mt-1">Excluding VAT • Shipping calculated at checkout</p>
                     </div>
                     <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${
                       product.inStock
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-red-500/10 text-red-400 border border-red-500/20"
+                        ? "bg-emerald-600/10 text-emerald-700 border border-emerald-600/20"
+                        : "bg-red-600/10 text-red-700 border border-red-600/20"
                     }`}>
                       {product.inStock ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
                       {product.inStock ? "Available" : "Unavailable"}
@@ -204,13 +225,18 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   <div className="flex gap-3 pt-2">
                     <motion.button
                       onClick={handleAdd}
-                      disabled={!product.inStock}
-                      className="flex-1 py-3.5 px-6 rounded-xl font-semibold text-sm uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: accentColor }}
-                      whileHover={product.inStock ? { scale: 1.02, filter: "brightness(1.1)" } : undefined}
-                      whileTap={product.inStock ? { scale: 0.98 } : undefined}
+                      disabled={!product.inStock || adding}
+                      aria-busy={adding || undefined}
+                      className="flex-1 py-3.5 px-6 rounded-sm font-semibold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: accentColor, color: accentText }}
+                      whileHover={product.inStock && !adding ? { scale: 1.02, filter: "brightness(1.1)" } : undefined}
+                      whileTap={product.inStock && !adding ? { scale: 0.98 } : undefined}
                     >
-                      {justAdded ? (
+                      {adding ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" /> Adding…
+                        </>
+                      ) : justAdded ? (
                         <>
                           <Check className="w-4 h-4" /> Added
                         </>
@@ -221,15 +247,15 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                     <motion.button
                       onClick={() => setOpen(true)}
                       aria-label="View quote"
-                      className="relative p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                      className="relative p-3.5 rounded-sm bg-default/40 border border-default/70 hover:bg-default/70 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <Package className="w-5 h-5 text-white/60" />
+                      <Package className="w-5 h-5 text-secondary" />
                       {count > 0 && (
                         <span
-                          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center text-black"
-                          style={{ backgroundColor: accentColor }}
+                          className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full text-[11px] font-bold flex items-center justify-center"
+                          style={{ backgroundColor: accentColor, color: accentText }}
                         >
                           {count}
                         </span>
@@ -238,21 +264,21 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                   </div>
                 </motion.div>
 
-                {/* Specs Grid - Exploded/Reveal Layout */}
+                {/* Specs Grid */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4 flex items-center gap-2">
-                    <Zap className="w-3.5 h-3.5" style={{ color: accentColor }} />
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-secondary mb-4 flex items-center gap-2">
+                    <Zap className="w-3.5 h-3.5" style={{ color: accentRaised }} />
                     Technical Specifications
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
                     {product.specs.map((spec, index) => (
                       <motion.div
                         key={spec.label}
-                        className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors group"
+                        className="p-4 rounded-sm bg-default/40 border border-default/70 hover:border-default transition-colors group"
                         initial={{ opacity: 0, y: 15, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{
@@ -262,10 +288,10 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
                           damping: 25,
                         }}
                       >
-                        <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1 group-hover:text-white/40 transition-colors">
+                        <p className="text-[10px] uppercase tracking-wider text-secondary mb-1 group-hover:text-secondary transition-colors">
                           {spec.label}
                         </p>
-                        <p className="text-sm font-semibold text-white/80 group-hover:text-white transition-colors">
+                        <p className="text-sm font-semibold text-secondary group-hover:text-secondary transition-colors">
                           {spec.value}
                         </p>
                       </motion.div>
@@ -275,16 +301,16 @@ export default function ProductModal({ product, accentColor, brandId, onClose }:
 
                 {/* Trust badges */}
                 <motion.div
-                  className="flex items-center gap-6 pt-4 border-t border-white/5"
+                  className="flex items-center gap-6 pt-4 border-t border-default/70"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.7 }}
                 >
-                  <div className="flex items-center gap-2 text-white/30 text-xs">
+                  <div className="flex items-center gap-2 text-secondary text-xs">
                     <Shield className="w-4 h-4" />
                     <span>Secure Transaction</span>
                   </div>
-                  <div className="flex items-center gap-2 text-white/30 text-xs">
+                  <div className="flex items-center gap-2 text-secondary text-xs">
                     <Award className="w-4 h-4" />
                     <span>Original Product</span>
                   </div>

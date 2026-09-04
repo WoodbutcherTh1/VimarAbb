@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { Category } from "@/lib/data";
 
 interface CategoryBannerProps {
@@ -13,6 +13,7 @@ export default function CategoryBanner({ category, accentColor }: CategoryBanner
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".category-banner-image",
@@ -51,9 +52,9 @@ export default function CategoryBanner({ category, accentColor }: CategoryBanner
           background: `linear-gradient(180deg, transparent 0%, ${accentColor}20 100%)`,
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-[#0a0a0f]/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/60 to-surface/20" />
       <div className="relative z-10 h-full flex items-end p-6 md:p-8">
-        <h2 className="category-banner-title text-2xl md:text-4xl font-bold tracking-tight text-white">
+        <h2 className="category-banner-title text-2xl md:text-4xl font-bold tracking-tight text-tertiary">
           {category.name}
         </h2>
       </div>
